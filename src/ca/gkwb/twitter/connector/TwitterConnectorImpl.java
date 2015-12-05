@@ -1,8 +1,11 @@
 package ca.gkwb.twitter.connector;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.apache.log4j.Logger;
 
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
@@ -19,13 +22,19 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.BasicAuth;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
+//examples here: https://github.com/twitter/hbc
 public class TwitterConnectorImpl implements TwitterConnector {
 
+	private Logger logger = Logger.getLogger(this.getClass().getName());
+	
 	//oauth info
 	private String consumerKey;
 	private String consumerSecret;
 	private String token;
 	private String secret;
+	
+	private BlockingQueue<String> msgQueue;
+	private BlockingQueue<Event> eventQueue;
 	
 //	private Hosts hosebirdHosts;
 //	private StatusesFilterEndpoint hosebirdEndpoint;
@@ -42,8 +51,8 @@ public class TwitterConnectorImpl implements TwitterConnector {
 			String consumerKey, String consumerSecret, String token,
 			String secret) throws FatalException {
 		/** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-		BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(100000);
-		BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
+		msgQueue = new LinkedBlockingQueue<String>(100000);
+		eventQueue = new LinkedBlockingQueue<Event>(1000);
 
 		/** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
 		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
@@ -73,8 +82,8 @@ public class TwitterConnectorImpl implements TwitterConnector {
 	public void connectBasicParams(List<Long> followings, List<String> terms,
 			String username, String password) throws FatalException {
 		/** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-		BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(100000);
-		BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>(1000);
+		msgQueue = new LinkedBlockingQueue<String>(100000);
+		eventQueue = new LinkedBlockingQueue<Event>(1000);
 
 		/** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
 		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
@@ -85,19 +94,24 @@ public class TwitterConnectorImpl implements TwitterConnector {
 		if (terms != null && terms.size() > 0) hosebirdEndpoint.trackTerms(terms);
 
 		// These secrets should be read from a config file
+		logger.debug("Creating Twitter Auth - Basic");
 		//Authentication hosebirdAuth = new OAuth1(consumerKey, consumerSecret, token, secret);
 		Authentication hosebirdAuth = new BasicAuth(username, password);
 		
+		logger.debug("Building Client - Basic");
 		ClientBuilder builder = new ClientBuilder()
-		  .name("StruckTOBotClient-01-OAuth")                              // optional: mainly for the logs
+		  .name("StruckTOBotClient-01-Basic")                              // optional: mainly for the logs
 		  .hosts(hosebirdHosts)
 		  .authentication(hosebirdAuth)
 		  .endpoint(hosebirdEndpoint)
 		  .processor(new StringDelimitedProcessor(msgQueue))
 		  .eventMessageQueue(eventQueue);                          // optional: use this if you want to process client events
 
+		logger.debug("Building Client - Basic");
 		hosebirdClient = builder.build();
+		
 		// Attempts to establish a connection.
+		logger.debug("Connecting - Basic");
 		hosebirdClient.connect();		
 		
 	}	
@@ -107,8 +121,21 @@ public class TwitterConnectorImpl implements TwitterConnector {
 	}
 	
 	public List<String> getStatusByRegex(String regex) throws WarnException {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> retStr = new ArrayList<String>();
+		while (!hosebirdClient.isDone()) {	
+			try {
+				logger.debug("Iterating through messages");
+				String msg = msgQueue.take();
+				logger.debug(msg);
+				retStr.add(msg);
+			} catch (Exception e) {
+				logger.error("Error DQing msg", e);
+				if (logger.isDebugEnabled()) e.printStackTrace();
+				throw new WarnException();
+			}
+		}
+		logger.debug("Dequeued Messages Size: "+retStr.size());
+		return retStr;
 	}
 		
 	//**************************************************
