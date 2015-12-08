@@ -8,14 +8,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import com.twitter.hbc.core.event.Event;
-
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
+import twitter4j.Paging;
+import twitter4j.Query;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -24,6 +26,7 @@ import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 //examples here: https://github.com/twitter/hbc
+//examples here: https://github.com/yusuke/twitter4j/tree/master/twitter4j-examples/src/main/java/twitter4j/examples
 public class TwitterConnectorImpl implements TwitterConnector {
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
@@ -33,9 +36,6 @@ public class TwitterConnectorImpl implements TwitterConnector {
 	private String consumerSecret;
 	private String token;
 	private String secret;
-	
-	private BlockingQueue<String> msgQueue;
-	private BlockingQueue<Event> eventQueue;
 	
 	private Twitter twitter;	
 	
@@ -133,21 +133,28 @@ public class TwitterConnectorImpl implements TwitterConnector {
 		
 	}	
 	
-	public List<String> getStatusByRegex(String regex) throws WarnException {
-		List<String> retStr = new ArrayList<String>();
-//		while (!hosebirdClient.isDone()) {	
-//			try {
-//				logger.debug("Iterating through messages");
-//				String msg = msgQueue.take();
-//				logger.debug(msg);
-//				retStr.add(msg);
-//			} catch (Exception e) {
-//				logger.error("Error DQing msg", e);
-//				if (logger.isDebugEnabled()) e.printStackTrace();
-//				throw new WarnException();
-//			}
-//		}
-//		logger.debug("Dequeued Messages Size: "+retStr.size());
+	public List<Status> getStatusByRegex(String regex, int limit) throws WarnException, FatalException {
+		List<Status> retStr = new ArrayList<Status>();
+		if (regex != null) regex = regex.toLowerCase();
+		try {
+			Query query = new Query();
+			Paging paging = new Paging(1, limit);
+			List<Status> statusList = twitter.getUserTimeline("TPSOperations",paging);
+			for (int i=0;i<statusList.size();i++) {
+				Status status = statusList.get(i);
+				
+				logger.debug("Read status: "+status.getText());
+				//set up the regex
+				Pattern pattern = Pattern.compile(regex);
+				Matcher m = pattern.matcher(status.getText());
+				logger.debug(status.getText().toLowerCase());
+				if (m.find()) retStr.add(status);
+			}
+			
+		} catch (TwitterException e) {
+			if (logger.isDebugEnabled()) e.printStackTrace();
+			throw new WarnException(e);
+		}
 		return retStr;
 	}
 	
