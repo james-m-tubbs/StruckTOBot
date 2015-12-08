@@ -1,26 +1,26 @@
 package ca.gkwb.twitter.connector;
 
+import java.awt.Desktop;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
+import com.twitter.hbc.core.event.Event;
+
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
-
-import com.twitter.hbc.ClientBuilder;
-import com.twitter.hbc.core.Client;
-import com.twitter.hbc.core.Constants;
-import com.twitter.hbc.core.Hosts;
-import com.twitter.hbc.core.HttpHosts;
-import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
-import com.twitter.hbc.core.event.Event;
-import com.twitter.hbc.core.processor.StringDelimitedProcessor;
-import com.twitter.hbc.httpclient.auth.Authentication;
-import com.twitter.hbc.httpclient.auth.BasicAuth;
-import com.twitter.hbc.httpclient.auth.OAuth1;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 //examples here: https://github.com/twitter/hbc
 public class TwitterConnectorImpl implements TwitterConnector {
@@ -36,10 +36,7 @@ public class TwitterConnectorImpl implements TwitterConnector {
 	private BlockingQueue<String> msgQueue;
 	private BlockingQueue<Event> eventQueue;
 	
-//	private Hosts hosebirdHosts;
-//	private StatusesFilterEndpoint hosebirdEndpoint;
-//	private Authentication hosebirdAuth;
-	private Client hosebirdClient;
+	private Twitter twitter;
 	
 	public void connectOAuthSpring(List<Long> followings, List<String> terms)
 			throws FatalException {
@@ -47,77 +44,77 @@ public class TwitterConnectorImpl implements TwitterConnector {
 		
 	}	
 	
-	public void connectOAuthParams(List<Long> followings, List<String> terms,
-			String consumerKey, String consumerSecret, String token,
-			String secret) throws FatalException {
-		/** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-		msgQueue = new LinkedBlockingQueue<String>(100000);
-		eventQueue = new LinkedBlockingQueue<Event>(1000);
-
-		/** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
-		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
-		StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
-
-		// Optional: set up some followings and track terms
-		hosebirdEndpoint.followings(followings);
-		hosebirdEndpoint.trackTerms(terms);
-
-		// These secrets should be read from a config file
-		Authentication hosebirdAuth = new OAuth1(consumerKey, consumerSecret, token, secret);
+	public void connectOAuthParams(String consumerKey, String consumerSecret) throws FatalException {
+		//check input consumerKey
+		if (consumerKey == null) consumerKey = this.consumerKey;
+		if (consumerKey == null) throw new FatalException("Missing ConsumerKey");
 		
-		ClientBuilder builder = new ClientBuilder()
-		  .name("StruckTOBotClient-01-OAuth")                              // optional: mainly for the logs
-		  .hosts(hosebirdHosts)
-		  .authentication(hosebirdAuth)
-		  .endpoint(hosebirdEndpoint)
-		  .processor(new StringDelimitedProcessor(msgQueue))
-		  .eventMessageQueue(eventQueue);                          // optional: use this if you want to process client events
-
-		hosebirdClient = builder.build();
-		// Attempts to establish a connection.
-		hosebirdClient.connect();		
+		//check input consumersecret
+		if (consumerSecret == null) consumerSecret = this.consumerSecret;
+		if (consumerSecret == null) throw new FatalException("Missing ConsumerSecret");
+		
+		twitter = new TwitterFactory().getInstance();
+		try {
+			RequestToken requestToken = twitter.getOAuthRequestToken();
+			AccessToken accessToken = getAccessToken(requestToken);
+		} catch (TwitterException e) {
+			logger.debug("Caught TwitterException: "+e.getMessage());
+			if (logger.isDebugEnabled()) e.printStackTrace();
+			throw new FatalException(e);
+		}
+				
 		
 	}
 	
-	public void connectBasicParams(List<Long> followings, List<String> terms,
-			String username, String password) throws FatalException {
-		/** Set up your blocking queues: Be sure to size these properly based on expected TPS of your stream */
-		msgQueue = new LinkedBlockingQueue<String>(100000);
-		eventQueue = new LinkedBlockingQueue<Event>(1000);
-
-		/** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
-		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
-		StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
-
-		// Optional: set up some followings and track terms
-		if (followings != null && followings.size() > 0) hosebirdEndpoint.followings(followings);
-		if (terms != null && terms.size() > 0) hosebirdEndpoint.trackTerms(terms);
-
-		// These secrets should be read from a config file
-		logger.debug("Creating Twitter Auth - Basic");
-		//Authentication hosebirdAuth = new OAuth1(consumerKey, consumerSecret, token, secret);
-		Authentication hosebirdAuth = new BasicAuth(username, password);
+	/**
+	 * Helper method to return the access token
+	 * 
+	 * @author tubbsj
+	 * @date 2015-12-08
+	 * @param requestURL
+	 * @return AccessToken
+	 * @throws FatalException
+	 */
+	private AccessToken getAccessToken(RequestToken requestToken) throws FatalException {
+		int retryCount = 0;
 		
-		logger.debug("Building Client - Basic");
-		ClientBuilder builder = new ClientBuilder()
-		  .name("StruckTOBotClient-01-Basic")                              // optional: mainly for the logs
-		  .hosts(hosebirdHosts)
-		  .authentication(hosebirdAuth)
-		  .endpoint(hosebirdEndpoint)
-		  .processor(new StringDelimitedProcessor(msgQueue))
-		  .eventMessageQueue(eventQueue);                          // optional: use this if you want to process client events
-
-		logger.debug("Building Client - Basic");
-		hosebirdClient = builder.build();
+		AccessToken accessToken = null;
 		
-		// Attempts to establish a connection.
-		logger.debug("Connecting - Basic");
-		hosebirdClient.connect();		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (null == accessToken) {
+        	if (retryCount > 10) throw new FatalException("Could not connect to twitter");
+            logger.debug("Open the following URL and grant access to your account:");
+            logger.debug(requestToken.getAuthorizationURL());
+            try {
+            	//get the requestURL
+                Desktop.getDesktop().browse(new URI(requestToken.getAuthorizationURL()));
+            } catch (UnsupportedOperationException ignore) {
+            } catch (IOException ignore) {
+            } catch (URISyntaxException e) {
+                throw new AssertionError(e);
+            }
+            logger.debug("Enter the PIN(if available) and hit enter after you granted access.[PIN]:");
+            String pin = br.readLine();
+            try {
+                if (pin.length() > 0) {
+                    accessToken = twitter.getOAuthAccessToken(requestToken, pin);
+                } else {
+                    accessToken = twitter.getOAuthAccessToken(requestToken);
+                }
+            } catch (TwitterException te) {
+                if (401 == te.getStatusCode()) {
+                    logger.debug("Unable to get the access token.");
+                } else {
+                    te.printStackTrace();
+                }
+            }
+            retryCount++;
+        }
+        logger.debug("Got access token.");
+        logger.debug("Access token: " + accessToken.getToken());
+        logger.debug("Access token secret: " + accessToken.getTokenSecret());
 		
-	}	
-	
-	public void disconnect() throws FatalException {
-		hosebirdClient.stop();
+        return accessToken;
 	}
 	
 	public List<String> getStatusByRegex(String regex) throws WarnException {
@@ -137,6 +134,11 @@ public class TwitterConnectorImpl implements TwitterConnector {
 		logger.debug("Dequeued Messages Size: "+retStr.size());
 		return retStr;
 	}
+	
+	public void disconnect() throws FatalException {
+		// TODO Auto-generated method stub
+		
+	}	
 		
 	//**************************************************
 	//** Setters
@@ -159,6 +161,18 @@ public class TwitterConnectorImpl implements TwitterConnector {
 	}
 
 	public void connect(List<Long> followings, List<String> terms)
+			throws FatalException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void connectOAuthParams(List<Long> followings, List<String> terms, String consumerKey, String consumerSecret,
+			String token, String secret) throws FatalException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void connectBasicParams(List<Long> followings, List<String> terms, String username, String password)
 			throws FatalException {
 		// TODO Auto-generated method stub
 		
