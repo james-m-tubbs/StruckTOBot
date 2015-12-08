@@ -21,23 +21,16 @@ public interface TwitterConnector {
 	/**
 	 * Connects using oAuthParams
 	 * 
-	 * @param followings
-	 * @param terms
 	 * @param consumerKey
 	 * @param consumerSecret
-	 * @param token
-	 * @param secret
 	 * @throws FatalException
 	 */
-	public void connectOAuthParams(List<Long> followings,  List<String> terms, String consumerKey, String consumerSecret, 
-			String token, String secret) throws FatalException;	
+	public void generateOAuthParams(String consumerKey, String consumerSecret) throws FatalException;
 	
-	public void connectBasicParams(List<Long> followings, List<String> terms,
-			String username, String password) throws FatalException;	
-	
-	public void connectOAuthSpring(List<Long> followings, 
-			List<String> terms) throws FatalException;
+	public void connect() throws FatalException;
 	
 	public void disconnect() throws FatalException;
+	
+	public void retweet(long statusId) throws WarnException, FatalException;
 
 }

@@ -21,6 +21,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 //examples here: https://github.com/twitter/hbc
 public class TwitterConnectorImpl implements TwitterConnector {
@@ -36,24 +37,27 @@ public class TwitterConnectorImpl implements TwitterConnector {
 	private BlockingQueue<String> msgQueue;
 	private BlockingQueue<Event> eventQueue;
 	
-	private Twitter twitter;
+	private Twitter twitter;	
 	
-	public void connectOAuthSpring(List<Long> followings, List<String> terms)
-			throws FatalException {
-		connectOAuthParams(followings, terms, consumerKey, consumerSecret, token, secret);
-		
-	}	
-	
-	public void connectOAuthParams(String consumerKey, String consumerSecret) throws FatalException {
+	public void generateOAuthParams(String consumerKey, String consumerSecret) throws FatalException {
 		//check input consumerKey
 		if (consumerKey == null) consumerKey = this.consumerKey;
 		if (consumerKey == null) throw new FatalException("Missing ConsumerKey");
 		
 		//check input consumersecret
 		if (consumerSecret == null) consumerSecret = this.consumerSecret;
-		if (consumerSecret == null) throw new FatalException("Missing ConsumerSecret");
+		if (consumerSecret == null) throw new FatalException("Missing ConsumerSecret");		
 		
-		twitter = new TwitterFactory().getInstance();
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+	    cb.setDebugEnabled(true)
+	            .setOAuthConsumerKey(consumerKey)
+	            .setOAuthConsumerSecret(consumerSecret)
+	            .setOAuthAccessToken(null)
+	            .setOAuthAccessTokenSecret(null);
+	    TwitterFactory tf = new TwitterFactory(cb.build());		
+	    
+	    twitter = tf.getInstance();
+	    
 		try {
 			RequestToken requestToken = twitter.getOAuthRequestToken();
 			AccessToken accessToken = getAccessToken(requestToken);
@@ -94,6 +98,7 @@ public class TwitterConnectorImpl implements TwitterConnector {
                 throw new AssertionError(e);
             }
             logger.debug("Enter the PIN(if available) and hit enter after you granted access.[PIN]:");
+            try {
             String pin = br.readLine();
             try {
                 if (pin.length() > 0) {
@@ -108,6 +113,11 @@ public class TwitterConnectorImpl implements TwitterConnector {
                     te.printStackTrace();
                 }
             }
+            } catch (IOException e) {
+            	if (logger.isDebugEnabled()) e.printStackTrace();
+            	throw new FatalException("Can't read form URL", e);
+            	
+            }
             retryCount++;
         }
         logger.debug("Got access token.");
@@ -117,27 +127,42 @@ public class TwitterConnectorImpl implements TwitterConnector {
         return accessToken;
 	}
 	
+	public void connect() {
+		TwitterFactory tf = new TwitterFactory();
+		if (twitter == null) twitter = tf.getInstance();
+		
+	}	
+	
 	public List<String> getStatusByRegex(String regex) throws WarnException {
 		List<String> retStr = new ArrayList<String>();
-		while (!hosebirdClient.isDone()) {	
-			try {
-				logger.debug("Iterating through messages");
-				String msg = msgQueue.take();
-				logger.debug(msg);
-				retStr.add(msg);
-			} catch (Exception e) {
-				logger.error("Error DQing msg", e);
-				if (logger.isDebugEnabled()) e.printStackTrace();
-				throw new WarnException();
-			}
-		}
-		logger.debug("Dequeued Messages Size: "+retStr.size());
+//		while (!hosebirdClient.isDone()) {	
+//			try {
+//				logger.debug("Iterating through messages");
+//				String msg = msgQueue.take();
+//				logger.debug(msg);
+//				retStr.add(msg);
+//			} catch (Exception e) {
+//				logger.error("Error DQing msg", e);
+//				if (logger.isDebugEnabled()) e.printStackTrace();
+//				throw new WarnException();
+//			}
+//		}
+//		logger.debug("Dequeued Messages Size: "+retStr.size());
 		return retStr;
 	}
 	
 	public void disconnect() throws FatalException {
-		// TODO Auto-generated method stub
-		
+		twitter = null;
+	}
+	
+	public void retweet(long statusId) throws WarnException, FatalException {
+		if (twitter == null) throw new FatalException("Not connected");
+		try {
+			twitter.retweetStatus(statusId);
+		} catch (TwitterException e) {
+			if (logger.isDebugEnabled()) e.printStackTrace();
+			throw new WarnException("Can't process retweet", e);
+		}
 	}	
 		
 	//**************************************************
@@ -158,23 +183,5 @@ public class TwitterConnectorImpl implements TwitterConnector {
 
 	public void setSecret(String secret) {
 		this.secret = secret;
-	}
-
-	public void connect(List<Long> followings, List<String> terms)
-			throws FatalException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void connectOAuthParams(List<Long> followings, List<String> terms, String consumerKey, String consumerSecret,
-			String token, String secret) throws FatalException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void connectBasicParams(List<Long> followings, List<String> terms, String username, String password)
-			throws FatalException {
-		// TODO Auto-generated method stub
-		
 	}
 }
