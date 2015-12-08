@@ -22,10 +22,11 @@ public class StruckTOBOImpl implements StruckTOBO {
 	public boolean queryAndProcess(int size) throws FatalException {
 		try {
 			boolean processed = false;
-			List<Status> status = tConn.getStatusByRegex("Pedestrian struck", 100);
+			List<Status> status = tConn.getStatusByRegex("cyclist|pedestrian", size);
 			logger.debug(status.size());
 			for (Status s : status) {
 				logger.debug("Status: "+s.getText());
+				//TODO processOneStatus
 				tConn.retweet(s.getId());
 				if (!processed) processed = true;
 			}
@@ -60,7 +61,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 	public void setTConn(TwitterConnector tconn) {
 		this.tConn = tconn;
 	}
-	public void setTconn(GoogleMapsConnector gconn) {
+	public void setGConn(GoogleMapsConnector gconn) {
 		this.gconn = gconn;
 	}
 }
