@@ -17,10 +17,10 @@ public interface StruckTOBO {
 	 * @author gingerk1d
 	 * @date 2015-12-02
 	 * @param int - max number of records to process
-	 * @return boolean
+	 * @return int - number of processed records
 	 * @throws FatalException
 	 */
-	public boolean queryAndProcess(int size) throws FatalException;
+	public int queryAndProcess(int size) throws FatalException;
 	
 	/**
 	 * Polls twitter for new incidents and returns a list of struckTOincidentsVOs. Builds struckTOIncidentVOs from

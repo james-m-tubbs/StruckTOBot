@@ -1,5 +1,6 @@
 package ca.gkwb.struckto.bo.test;
 
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +13,7 @@ public class StruckTOBOTest {
 	
 	StruckTOBOImpl stBO;
 	TwitterConnector tConn;
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Before
 	public void setUp() throws Exception {
@@ -26,9 +28,10 @@ public class StruckTOBOTest {
 	}
 
 	@Test
-	public void test() {
+	public void testQueryAndRetweet() {
 		try {
-			stBO.queryAndProcess(100);
+			int retweets = stBO.queryAndProcess(100);
+			logger.debug("New Retweet Count: "+retweets);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

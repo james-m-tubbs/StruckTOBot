@@ -142,13 +142,12 @@ public class TwitterConnectorImpl implements TwitterConnector {
 			List<Status> statusList = twitter.getUserTimeline("TPSOperations",paging);
 			for (int i=0;i<statusList.size();i++) {
 				Status status = statusList.get(i);
-				
-				logger.debug("Read status: "+status.getText());
+//				logger.debug("Read status: "+status.getText());
 				//set up the regex
-				Pattern pattern = Pattern.compile(regex);
-				Matcher m = pattern.matcher(status.getText());
-				logger.debug(status.getText().toLowerCase());
-				if (m.find()) retStr.add(status);
+				if (checkStatusRegexMatch(status, regex)) {
+					logger.debug("Adding status:"+status.getId());
+					retStr.add(status);
+				}
 			}
 			
 		} catch (TwitterException e) {
@@ -156,6 +155,23 @@ public class TwitterConnectorImpl implements TwitterConnector {
 			throw new WarnException(e);
 		}
 		return retStr;
+	}
+	
+	public boolean checkStatusRegexMatch(Status status, String regex) throws WarnException {
+		if (regex == null) throw new WarnException("Regex is null");
+		Pattern pattern = Pattern.compile(regex);
+		Matcher m = pattern.matcher(status.getText().toLowerCase());
+//		logger.debug(status.getText().toLowerCase());
+		if (status.getId() == 674413700493651968L) {
+			logger.debug("####################### JME ###########################");
+			logger.debug(status.getText());
+			logger.debug("####################### JME ###########################");
+		}
+		if (m.find()) {
+			logger.debug("Matched Status: "+status.getText().toLowerCase());	
+			return true;
+		}
+		return false;
 	}
 	
 	public void disconnect() throws FatalException {
@@ -166,6 +182,16 @@ public class TwitterConnectorImpl implements TwitterConnector {
 		if (twitter == null) throw new FatalException("Not connected");
 		try {
 			twitter.retweetStatus(statusId);
+		} catch (TwitterException e) {
+			if (logger.isDebugEnabled()) e.printStackTrace();
+			throw new WarnException("Can't process retweet", e);
+		}
+	}
+	
+	public Status getStatusById(long statusId) throws WarnException, FatalException {
+		if (twitter == null) throw new FatalException("Not connected");
+		try {
+			return twitter.showStatus(statusId);
 		} catch (TwitterException e) {
 			if (logger.isDebugEnabled()) e.printStackTrace();
 			throw new WarnException("Can't process retweet", e);
