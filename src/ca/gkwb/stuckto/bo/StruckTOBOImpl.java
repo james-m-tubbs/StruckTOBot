@@ -1,5 +1,6 @@
 package ca.gkwb.stuckto.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -19,22 +20,36 @@ public class StruckTOBOImpl implements StruckTOBO {
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public boolean queryAndProcess(int size) throws FatalException {
+	public int queryAndProcess(int size) throws FatalException {
+		int processed = 0;
 		try {
-			boolean processed = false;
-			List<Status> status = tConn.getStatusByRegex("cyclist|pedestrian", size);
+			List<Status> status = new ArrayList<Status>();
+			status.addAll(tConn.getStatusByRegex(tConn.CYCLIST_REGEX, size));
+			logger.debug("Added Cyclist Regex: "+status.size());
+			
+			status.addAll(tConn.getStatusByRegex(tConn.PEDESTRIAN_REGEX, size));
+			logger.debug("Added Pedestrian Regex: "+status.size());
+			
 			logger.debug(status.size());
 			for (Status s : status) {
-				logger.debug("Status: "+s.getText());
+				//logger.debug("Status: "+s.getText());
 				//TODO processOneStatus
-				tConn.retweet(s.getId());
-				if (!processed) processed = true;
+				if (!checkRetweeted(s, "StruckTOBot")) {
+					logger.debug("Not a previous retweet. Sending new");
+					try {
+						tConn.retweet(s.getId());
+						processed++;
+					} catch (WarnException e) {
+						//if (logger.isDebugEnabled()) e.printStackTrace();
+						logger.debug("Couldn't Retweet "+s.getId());
+					}
+				}
 			}
 			return processed;
-		} catch (WarnException e) {
+		} catch (Exception e) {
 			if (logger.isDebugEnabled()) e.printStackTrace();
 			logger.error(e);
-			return false;
+			return processed;
 		}
 	}
 	public List<StruckTOIncidentVO> getNewIncidents() throws FatalException,
@@ -45,6 +60,12 @@ public class StruckTOBOImpl implements StruckTOBO {
 	public boolean processIncident(StruckTOIncidentVO stVO)
 			throws WarnException, FatalException {
 		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	public boolean checkRetweeted(Status status, String username) throws WarnException, FatalException {
+		logger.debug("Retweet UserID: "+status.getCurrentUserRetweetId());
+		//TODO resolve this
 		return false;
 	}
 	
