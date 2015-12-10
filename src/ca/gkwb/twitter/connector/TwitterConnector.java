@@ -8,6 +8,9 @@ import twitter4j.Status;
 
 public interface TwitterConnector {
 
+	public final static String CYCLIST_REGEX = ".?(C|c)yclist";
+	public final static String PEDESTRIAN_REGEX = ".?(P|p)edestrian";
+	
 	/**
 	 * Connects using oAuthParams
 	 * 
@@ -24,4 +27,8 @@ public interface TwitterConnector {
 	public void retweet(long statusId) throws WarnException, FatalException;
 
 	public List<Status> getStatusByRegex(String regex, int limit) throws WarnException, FatalException;
+	
+	public Status getStatusById(long statusId) throws WarnException, FatalException;
+
+	public boolean checkStatusRegexMatch(Status status, String regex) throws WarnException;
 }
