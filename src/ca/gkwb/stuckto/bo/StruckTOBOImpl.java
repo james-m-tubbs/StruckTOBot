@@ -20,14 +20,14 @@ public class StruckTOBOImpl implements StruckTOBO {
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public int queryAndProcess(int size) throws FatalException {
+	public int queryAndProcess(String targetAcct, int size) throws FatalException {
 		int processed = 0;
 		try {
 			List<Status> status = new ArrayList<Status>();
-			status.addAll(tConn.getStatusByRegex(tConn.CYCLIST_REGEX, size));
+			status.addAll(tConn.getStatusByRegex(targetAcct, tConn.CYCLIST_REGEX, size));
 			logger.debug("Added Cyclist Regex: "+status.size());
 			
-			status.addAll(tConn.getStatusByRegex(tConn.PEDESTRIAN_REGEX, size));
+			status.addAll(tConn.getStatusByRegex(targetAcct, tConn.PEDESTRIAN_REGEX, size));
 			logger.debug("Added Pedestrian Regex: "+status.size());
 			
 			logger.debug(status.size());

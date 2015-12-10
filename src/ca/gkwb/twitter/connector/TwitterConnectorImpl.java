@@ -133,13 +133,13 @@ public class TwitterConnectorImpl implements TwitterConnector {
 		
 	}	
 	
-	public List<Status> getStatusByRegex(String regex, int limit) throws WarnException, FatalException {
+	public List<Status> getStatusByRegex(String targetAccount, String regex, int limit)  throws WarnException, FatalException {
 		List<Status> retStr = new ArrayList<Status>();
 		if (regex != null) regex = regex.toLowerCase();
 		try {
 			Query query = new Query();
 			Paging paging = new Paging(1, limit);
-			List<Status> statusList = twitter.getUserTimeline("TPSOperations",paging);
+			List<Status> statusList = twitter.getUserTimeline(targetAccount,paging);
 			for (int i=0;i<statusList.size();i++) {
 				Status status = statusList.get(i);
 //				logger.debug("Read status: "+status.getText());

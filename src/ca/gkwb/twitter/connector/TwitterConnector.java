@@ -26,7 +26,7 @@ public interface TwitterConnector {
 	
 	public void retweet(long statusId) throws WarnException, FatalException;
 
-	public List<Status> getStatusByRegex(String regex, int limit) throws WarnException, FatalException;
+	public List<Status> getStatusByRegex(String targetAccount, String regex, int limit) throws WarnException, FatalException;
 	
 	public Status getStatusById(long statusId) throws WarnException, FatalException;
 

@@ -10,17 +10,7 @@ import ca.gkwb.struckto.vo.StruckTOLocationVO;
 
 public interface StruckTOBO {
 	
-	/**
-	 * Queries new incidents from twitter and process them into struckTO DB & google maps. Returns
-	 * true if records were found and processed.
-	 * 
-	 * @author gingerk1d
-	 * @date 2015-12-02
-	 * @param int - max number of records to process
-	 * @return int - number of processed records
-	 * @throws FatalException
-	 */
-	public int queryAndProcess(int size) throws FatalException;
+	public int queryAndProcess(String targetAcct, int size) throws FatalException;
 	
 	/**
 	 * Polls twitter for new incidents and returns a list of struckTOincidentsVOs. Builds struckTOIncidentVOs from

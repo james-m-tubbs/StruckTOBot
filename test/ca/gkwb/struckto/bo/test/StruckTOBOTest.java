@@ -30,7 +30,8 @@ public class StruckTOBOTest {
 	@Test
 	public void testQueryAndRetweet() {
 		try {
-			int retweets = stBO.queryAndProcess(100);
+			int retweets = stBO.queryAndProcess("TPSOperations",100);
+			retweets = retweets + stBO.queryAndProcess("PeelPoliceMedia",100);
 			logger.debug("New Retweet Count: "+retweets);
 		} catch (Exception e) {
 			e.printStackTrace();

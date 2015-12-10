@@ -51,7 +51,7 @@ public class TwitterConnectorTest {
 	@Test
 	public void testQueryAllStatus() {
 		try {
-			List<Status> status = tConn.getStatusByRegex("Pedestrian struck", 100);
+			List<Status> status = tConn.getStatusByRegex("TPSOperations","Pedestrian struck", 100);
 			logger.debug(status.size());
 			for (Status s : status) {
 				logger.debug("Status: "+s.getText());
@@ -65,7 +65,7 @@ public class TwitterConnectorTest {
 	@Test
 	public void testTweetMatch() {
 		try {
-			List<Status> status = tConn.getStatusByRegex(tConn.PEDESTRIAN_REGEX, 100);
+			List<Status> status = tConn.getStatusByRegex("TPSOperations", tConn.PEDESTRIAN_REGEX, 100);
 			logger.debug(status.size());
 			for (Status s : status) {
 				logger.debug("Status: "+s.getText());
