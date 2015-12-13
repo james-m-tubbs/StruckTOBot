@@ -18,7 +18,8 @@ public class StruckTOBOTest {
 	TwitterConnector tConn;
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	List<String> peelHashtags = new ArrayList();
-	List<String> toHashtags = new ArrayList();
+	List<String> toHashtags = new ArrayList<String>();
+	List<String> yorkHashtags = new ArrayList<String>();
 
 	@Before
 	public void setUp() throws Exception {
@@ -29,8 +30,13 @@ public class StruckTOBOTest {
 		
 		peelHashtags.add("bikeBrampton");
 		peelHashtags.add("bikeMississauga");
+		peelHashtags.add("bikeON");
 		
 		toHashtags.add("bikeTO");
+		toHashtags.add("bikeON");
+		
+		yorkHashtags.add("bikeYork");
+		yorkHashtags.add("bikeON");
 		
 	}
 
@@ -43,6 +49,8 @@ public class StruckTOBOTest {
 		try {
 			int retweets = stBO.queryAndProcess("TPSOperations",100, toHashtags);
 			retweets = retweets + stBO.queryAndProcess("PeelPoliceMedia",100,peelHashtags);
+			retweets = retweets + stBO.queryAndProcess("YRP",100,yorkHashtags);
+			
 			logger.debug("New Retweet Count: "+retweets);
 		} catch (Exception e) {
 			e.printStackTrace();
