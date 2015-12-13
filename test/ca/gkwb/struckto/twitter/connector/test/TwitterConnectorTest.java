@@ -27,15 +27,15 @@ public class TwitterConnectorTest {
 		tConn.disconnect();
 	}
 
-//	@Test
-//	public void testGenerateOAuthParams() {
-//		try {
-//			tConn.generateOAuthParams("", "");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			Assert.fail(e.getMessage());
-//		}
-//	}
+	@Test
+	public void testGenerateOAuthParams() {
+		try {
+			tConn.generateOAuthParams("", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
 	
 
 //	@Test

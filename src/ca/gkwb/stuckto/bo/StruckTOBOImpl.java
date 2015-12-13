@@ -45,6 +45,12 @@ public class StruckTOBOImpl implements StruckTOBO {
 					}
 				}
 			}
+			if (processed > 0) {
+				try {
+					tConn.sendStatusUpdate("New Incidents Reported by @"+targetAcct+" since last run: "+processed);
+				} catch (WarnException e) {
+				}
+			}
 			return processed;
 		} catch (Exception e) {
 			if (logger.isDebugEnabled()) e.printStackTrace();
@@ -84,5 +90,9 @@ public class StruckTOBOImpl implements StruckTOBO {
 	}
 	public void setGConn(GoogleMapsConnector gconn) {
 		this.gconn = gconn;
+	}
+	public void sendTwitterUpdate() throws WarnException {
+		// TODO Auto-generated method stub
+		
 	}
 }

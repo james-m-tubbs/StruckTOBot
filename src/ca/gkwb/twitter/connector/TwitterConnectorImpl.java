@@ -18,6 +18,7 @@ import ca.gkwb.struckto.exception.WarnException;
 import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -196,6 +197,17 @@ public class TwitterConnectorImpl implements TwitterConnector {
 			if (logger.isDebugEnabled()) e.printStackTrace();
 			throw new WarnException("Can't process retweet", e);
 		}
+	}
+	
+	public long sendStatusUpdate(String status) throws FatalException, WarnException {
+		if (twitter == null) throw new FatalException("Not connected");
+		try {
+			Status retStatus = twitter.updateStatus(status);
+			return retStatus.getId();
+		} catch (TwitterException e) {
+			logger.error("Error posting status",e);
+			throw new WarnException(e);
+		}
 	}	
 		
 	//**************************************************
@@ -216,5 +228,10 @@ public class TwitterConnectorImpl implements TwitterConnector {
 
 	public void setSecret(String secret) {
 		this.secret = secret;
+	}
+
+	public boolean ceckStatusRegexMatch(Status status, String regex) throws WarnException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

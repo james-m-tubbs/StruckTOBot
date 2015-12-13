@@ -48,5 +48,7 @@ public interface StruckTOBO {
 	 * @throws FatalException
 	 */
 	public StruckTOLocationVO getLocationVOForIncident(StruckTOIncidentVO stVO) throws WarnException, FatalException;
+	
+	public void sendTwitterUpdate() throws WarnException;
 
 }

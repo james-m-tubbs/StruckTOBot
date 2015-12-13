@@ -31,4 +31,6 @@ public interface TwitterConnector {
 	public Status getStatusById(long statusId) throws WarnException, FatalException;
 
 	public boolean checkStatusRegexMatch(Status status, String regex) throws WarnException;
+	
+	public long sendStatusUpdate(String status) throws FatalException, WarnException;
 }
