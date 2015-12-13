@@ -20,7 +20,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public int queryAndProcess(String targetAcct, int size) throws FatalException {
+	public int queryAndProcess(String targetAcct, int size, List<String> hashTags) throws FatalException {
 		int processed = 0;
 		try {
 			List<Status> status = new ArrayList<Status>();
@@ -47,7 +47,8 @@ public class StruckTOBOImpl implements StruckTOBO {
 			}
 			if (processed > 0) {
 				try {
-					tConn.sendStatusUpdate("New Incidents Reported by @"+targetAcct+" since last run: "+processed);
+					String htags = buildHashtagString(hashTags);
+					tConn.sendStatusUpdate("New Incidents Reported by @"+targetAcct+" since last run: "+processed+" "+htags);
 				} catch (WarnException e) {
 				}
 			}
@@ -58,6 +59,17 @@ public class StruckTOBOImpl implements StruckTOBO {
 			return processed;
 		}
 	}
+	
+	public String buildHashtagString(List<String> htags) {
+		String retStr = "";
+		for (int i=0;i<htags.size();i++) {
+			if (i>0) retStr = retStr + " ";
+			retStr = retStr + "#"+htags.get(i);
+		}
+		logger.debug("generated hashtag string: "+retStr);
+		return retStr;
+	}
+	
 	public List<StruckTOIncidentVO> getNewIncidents() throws FatalException,
 			WarnException {
 		// TODO Auto-generated method stub

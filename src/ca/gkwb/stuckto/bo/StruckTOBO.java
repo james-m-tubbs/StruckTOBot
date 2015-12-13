@@ -10,7 +10,7 @@ import ca.gkwb.struckto.vo.StruckTOLocationVO;
 
 public interface StruckTOBO {
 	
-	public int queryAndProcess(String targetAcct, int size) throws FatalException;
+	public int queryAndProcess(String targetAcct, int size, List<String> hashTags) throws FatalException;
 	
 	/**
 	 * Polls twitter for new incidents and returns a list of struckTOincidentsVOs. Builds struckTOIncidentVOs from
@@ -50,5 +50,7 @@ public interface StruckTOBO {
 	public StruckTOLocationVO getLocationVOForIncident(StruckTOIncidentVO stVO) throws WarnException, FatalException;
 	
 	public void sendTwitterUpdate() throws WarnException;
+	
+	public String buildHashtagString(List<String> htags);
 
 }
