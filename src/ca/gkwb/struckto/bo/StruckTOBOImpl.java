@@ -1,4 +1,4 @@
-package ca.gkwb.stuckto.bo;
+package ca.gkwb.struckto.bo;
 
 import java.util.ArrayList;
 import java.util.List;

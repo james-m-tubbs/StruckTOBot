@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ca.gkwb.stuckto.bo.StruckTOBOImpl;
+import ca.gkwb.struckto.bo.StruckTOBOImpl;
 import ca.gkwb.twitter.connector.TwitterConnector;
 import ca.gkwb.twitter.connector.TwitterConnectorImpl;
 

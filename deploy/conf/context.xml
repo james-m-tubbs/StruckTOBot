@@ -16,7 +16,7 @@
    </bean>
 
    <bean id="StruckTOBO" class="ca.gkwb.struckto.bo.StruckTOBOImpl">
-       <property name="tConn" ref="TwitterConnector"/>
+       <property name="tConn" value="TwitterConnector"/>
    </bean>
 
 </beans>
