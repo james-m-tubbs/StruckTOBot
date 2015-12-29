@@ -1,6 +1,7 @@
 package ca.gkwb.struckto.bo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -92,6 +93,11 @@ public class StruckTOBOImpl implements StruckTOBO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public List<String> parseHashtags(String hashtagString) {
+		String[] htArray = hashtagString.split(",");
+		return new ArrayList<String>(Arrays.asList(htArray));
+	}	
 	
 	//**********************************************************
 	//** Getters and Setters

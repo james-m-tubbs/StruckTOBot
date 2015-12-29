@@ -52,5 +52,7 @@ public interface StruckTOBO {
 	public void sendTwitterUpdate() throws WarnException;
 	
 	public String buildHashtagString(List<String> htags);
+	
+	public List<String> parseHashtags(String hashtagString);
 
 }

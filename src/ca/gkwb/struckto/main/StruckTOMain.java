@@ -1,9 +1,7 @@
 package ca.gkwb.struckto.main;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -18,9 +16,6 @@ public class StruckTOMain {
 		
 		Logger logger = Logger.getLogger(ca.gkwb.struckto.main.StruckTOMain.class);
 		StruckTOBO stBO;
-		final String targetAcctProp = "target_acct";
-		final String batchSizeProp = "batch_size";
-		final String hashtagProp = "hashtags";
 		
 		try {
 			//default values
@@ -33,20 +28,13 @@ public class StruckTOMain {
 			stBO = (StruckTOBO)context.getBean("StruckTOBO");
 			
 			if (args.length > 0) {
-				logger.debug("Resolving Properties from: "+args[0]);
-				Properties props = new Properties();
-				try {
-					InputStream is = ca.gkwb.struckto.main.StruckTOMain.class.getResourceAsStream(args[0]);
-					props.load(is);
-					
-					targetAcct = props.getProperty(targetAcctProp);
-					batchSize = new Integer(props.getProperty(batchSizeProp));
-					//TODO load hashTag arraylist from comma delimited string
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw new FatalException();
-				}
+				logger.debug("Target Acct: "+args[0]);
+				logger.debug("Batch Size: "+args[1]);
+				logger.debug("Hashtag List: "+args[2]);
+				
+				targetAcct = args[0];
+				batchSize = new Integer(args[1]);
+				hashTags = stBO.parseHashtags(args[2]);
 			}
 				
 			logger.debug("Running with params: batchSize="+batchSize+", targetAcct="+targetAcct+", hashTags="+hashTags);
