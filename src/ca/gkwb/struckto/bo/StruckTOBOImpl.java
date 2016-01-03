@@ -36,7 +36,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 				//logger.debug("Status: "+s.getText());
 				//TODO processOneStatus
 				if (!checkRetweeted(s, "StruckTOBot")) {
-					logger.debug("Not a previous retweet. Sending new");
+					logger.debug("Not a previous retweet. Sending new retweet");
 					try {
 						tConn.retweet(s.getId());
 						processed++;
@@ -44,6 +44,8 @@ public class StruckTOBOImpl implements StruckTOBO {
 						//if (logger.isDebugEnabled()) e.printStackTrace();
 						logger.debug("Couldn't Retweet "+s.getId());
 					}
+				} else {
+					logger.debug("Already retweeted, igonring. "+s.getId());
 				}
 			}
 			if (processed > 0) {
@@ -83,9 +85,8 @@ public class StruckTOBOImpl implements StruckTOBO {
 	}
 	
 	public boolean checkRetweeted(Status status, String username) throws WarnException, FatalException {
-		logger.debug("Retweet UserID: "+status.getCurrentUserRetweetId());
-		//TODO resolve this
-		return false;
+		//logger.debug("Retweet UserID: "+status.getCurrentUserRetweetId());
+		return status.isRetweetedByMe();
 	}
 	
 	public StruckTOLocationVO getLocationVOForIncident(StruckTOIncidentVO stVO)
