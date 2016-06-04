@@ -6,18 +6,21 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import ca.gkwb.google.connector.maps.GoogleMapsConnector;
+import ca.gkwb.struckto.dao.StruckTOIncidentDAO;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
 import ca.gkwb.struckto.vo.StruckTOIncidentVO;
 import ca.gkwb.struckto.vo.StruckTOLocationVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
+import lombok.Setter;
 import twitter4j.Status;
 
 public class StruckTOBOImpl implements StruckTOBO {
 	
+	@Setter
 	private TwitterConnector tConn;
-	private GoogleMapsConnector gconn;
+	@Setter
+	private StruckTOIncidentDAO stiDAO;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -38,6 +41,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 				if (!checkRetweeted(s, "StruckTOBot")) {
 					logger.debug("Not a previous retweet. Sending new retweet");
 					try {
+						processIncident(s);
 						tConn.retweet(s.getId());
 						processed++;
 					} catch (WarnException e) {
@@ -48,13 +52,13 @@ public class StruckTOBOImpl implements StruckTOBO {
 					logger.debug("Already retweeted, igonring. "+s.getId());
 				}
 			}
-			if (processed > 0) {
-				try {
-					String htags = buildHashtagString(hashTags);
-					tConn.sendStatusUpdate("New Incidents Reported by @"+targetAcct+" since last run: "+processed+" "+htags);
-				} catch (WarnException e) {
-				}
-			}
+//			if (processed > 0) {
+//				try {
+//					String htags = buildHashtagString(hashTags);
+//					tConn.sendStatusUpdate("New Incidents Reported by @"+targetAcct+" since last run: "+processed+" "+htags);
+//				} catch (WarnException e) {
+//				}
+//			}
 			return processed;
 		} catch (Exception e) {
 			if (logger.isDebugEnabled()) e.printStackTrace();
@@ -101,17 +105,13 @@ public class StruckTOBOImpl implements StruckTOBO {
 	}	
 	
 	//**********************************************************
-	//** Getters and Setters
+	//** Helper Methods
 	//**********************************************************
 	
-	public void setTConn(TwitterConnector tconn) {
-		this.tConn = tconn;
-	}
-	public void setGConn(GoogleMapsConnector gconn) {
-		this.gconn = gconn;
-	}
-	public void sendTwitterUpdate() throws WarnException {
-		// TODO Auto-generated method stub
-		
+	private void processIncident(Status s) {
+		//create incidentVO from status
+		//TODO
+		StruckTOIncidentVO stVO = new StruckTOIncidentVO(
+				);
 	}
 }

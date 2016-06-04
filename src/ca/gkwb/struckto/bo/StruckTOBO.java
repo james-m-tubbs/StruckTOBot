@@ -49,8 +49,6 @@ public interface StruckTOBO {
 	 */
 	public StruckTOLocationVO getLocationVOForIncident(StruckTOIncidentVO stVO) throws WarnException, FatalException;
 	
-	public void sendTwitterUpdate() throws WarnException;
-	
 	public String buildHashtagString(List<String> htags);
 	
 	public List<String> parseHashtags(String hashtagString);
