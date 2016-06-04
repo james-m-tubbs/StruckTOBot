@@ -38,9 +38,10 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public class StruckTOIncidentVO {
-	
 	@Getter @Setter
 	private String id;
+	@Getter @Setter
+	private String tweetId;
 	@Getter @Setter
 	private Date activityDate;
 	@Getter @Setter
@@ -57,6 +58,8 @@ public class StruckTOIncidentVO {
 	private String user;
 	@Getter @Setter
 	private StruckTOLocationVO location;
+	@Getter @Setter
+	private StruckTOTweetVO tweet;
 	
 	@Getter
 	public final static String FATAL = "FATAL";

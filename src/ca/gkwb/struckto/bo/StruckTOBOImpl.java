@@ -111,7 +111,6 @@ public class StruckTOBOImpl implements StruckTOBO {
 	private void processIncident(Status s) {
 		//create incidentVO from status
 		//TODO
-		StruckTOIncidentVO stVO = new StruckTOIncidentVO(
-				);
+		StruckTOIncidentVO stVO = new StruckTOIncidentVO();
 	}
 }
