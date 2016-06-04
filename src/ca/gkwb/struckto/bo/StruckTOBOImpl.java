@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import ca.gkwb.struckto.dao.StruckTOIncidentDAO;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
-import ca.gkwb.struckto.vo.StruckTOIncidentVO;
-import ca.gkwb.struckto.vo.StruckTOLocationVO;
+import ca.gkwb.struckto.incident.StruckTOIncidentDAO;
+import ca.gkwb.struckto.incident.StruckTOIncidentVO;
+import ca.gkwb.struckto.location.StruckTOLocationVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
 import lombok.Setter;
 import twitter4j.Status;

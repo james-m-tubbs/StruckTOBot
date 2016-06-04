@@ -1,7 +1,6 @@
-package ca.gkwb.struckto.dao;
+package ca.gkwb.struckto.location;
 
 import ca.gkwb.struckto.exception.GenericDBException;
-import ca.gkwb.struckto.vo.StruckTOLocationVO;
 
 public interface StruckTOLocationDAO {
 	

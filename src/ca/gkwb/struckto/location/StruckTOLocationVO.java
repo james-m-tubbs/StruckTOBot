@@ -1,4 +1,4 @@
-package ca.gkwb.struckto.vo;
+package ca.gkwb.struckto.location;
 
 import java.sql.Date;
 

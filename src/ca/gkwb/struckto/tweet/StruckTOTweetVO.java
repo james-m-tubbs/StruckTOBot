@@ -1,4 +1,4 @@
-package ca.gkwb.struckto.vo;
+package ca.gkwb.struckto.tweet;
 
 import java.sql.Date;
 

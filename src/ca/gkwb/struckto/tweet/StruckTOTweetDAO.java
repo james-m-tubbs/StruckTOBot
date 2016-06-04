@@ -1,4 +1,4 @@
-package ca.gkwb.struckto.dao;
+package ca.gkwb.struckto.tweet;
 
 public interface StruckTOTweetDAO {
 

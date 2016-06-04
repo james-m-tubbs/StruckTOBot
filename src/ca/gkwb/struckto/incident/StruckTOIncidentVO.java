@@ -28,10 +28,12 @@
  * 
  */
 
-package ca.gkwb.struckto.vo;
+package ca.gkwb.struckto.incident;
 
 import java.sql.Date;
 
+import ca.gkwb.struckto.location.StruckTOLocationVO;
+import ca.gkwb.struckto.tweet.StruckTOTweetVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

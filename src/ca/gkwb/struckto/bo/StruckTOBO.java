@@ -5,8 +5,8 @@ import java.util.List;
 
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
-import ca.gkwb.struckto.vo.StruckTOIncidentVO;
-import ca.gkwb.struckto.vo.StruckTOLocationVO;
+import ca.gkwb.struckto.incident.StruckTOIncidentVO;
+import ca.gkwb.struckto.location.StruckTOLocationVO;
 
 public interface StruckTOBO {
 	

@@ -1,10 +1,9 @@
-package ca.gkwb.struckto.dao;
+package ca.gkwb.struckto.incident;
 
 import java.util.List;
 
 import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.NoRowFoundException;
-import ca.gkwb.struckto.vo.StruckTOIncidentVO;
 
 public interface StruckTOIncidentDAO {
 	
