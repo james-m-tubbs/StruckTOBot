@@ -32,93 +32,36 @@ package ca.gkwb.struckto.vo;
 
 import java.sql.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
 public class StruckTOIncidentVO {
 	
+	@Getter @Setter
 	private String id;
+	@Getter @Setter
 	private Date activityDate;
+	@Getter @Setter
 	private Date createDate;
+	@Getter @Setter
 	private String newsUrl;
+	@Getter @Setter
 	private String tweetUrl;
+	@Getter @Setter
 	private String severity;
+	@Getter @Setter
 	private String source;
+	@Getter @Setter
 	private String user;
+	@Getter @Setter
 	private StruckTOLocationVO location;
 	
+	@Getter
 	public final static String FATAL = "FATAL";
+	@Getter
 	public final static String SEVERE = "SEVERE";
+	@Getter
 	public final static String MINOR = "MINOR";	
-
-	public StruckTOIncidentVO(String id, Date activityDate, Date createDate,
-			String newsUrl, String tweetUrl, String severity, String source,
-			String user, StruckTOLocationVO location) {
-		super();
-		this.id = id;
-		this.activityDate = activityDate;
-		this.createDate = createDate;
-		this.newsUrl = newsUrl;
-		this.tweetUrl = tweetUrl;
-		this.severity = severity;
-		this.source = source;
-		this.user = user;
-		this.location = location;
-	}
-
-	public StruckTOLocationVO getLocation() {
-		return location;
-	}
-
-	public void setLocation(StruckTOLocationVO location) {
-		this.location = location;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public Date getActivityDate() {
-		return activityDate;
-	}
-	public void setActivityDate(Date activityDate) {
-		this.activityDate = activityDate;
-	}
-	public String getNewsUrl() {
-		return newsUrl;
-	}
-	public void setNewsUrl(String newsUrl) {
-		this.newsUrl = newsUrl;
-	}
-	public String getTweetUrl() {
-		return tweetUrl;
-	}
-	public void setTweetUrl(String tweetUrl) {
-		this.tweetUrl = tweetUrl;
-	}
-	public String getSeverity() {
-		return severity;
-	}
-	public void setSeverity(String severity) {
-		this.severity = severity;
-	}
-	public String getSource() {
-		return source;
-	}
-	public void setSource(String source) {
-		this.source = source;
-	}
-	public String getUser() {
-		return user;
-	}
-	public void setUser(String user) {
-		this.user = user;
-	}
 }
