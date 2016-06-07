@@ -38,7 +38,13 @@
 		<artifactId>lombok</artifactId>
 		<version>1.16.8</version>
 		<scope>provided</scope>
-	</dependency>		 
+	</dependency>
+	<!-- http://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-jdbc</artifactId>
+	    <version>4.2.6.RELEASE</version>
+	</dependency>
   </dependencies> 
   
   <build>
