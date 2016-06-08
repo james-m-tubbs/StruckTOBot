@@ -1,16 +1,22 @@
 package ca.gkwb.struckto.bo;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import ca.gkwb.struckto.exception.FatalException;
+import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
 import ca.gkwb.struckto.incident.StruckTOIncidentDAO;
 import ca.gkwb.struckto.incident.StruckTOIncidentVO;
+import ca.gkwb.struckto.location.StruckTOLocationDAO;
 import ca.gkwb.struckto.location.StruckTOLocationVO;
+import ca.gkwb.struckto.tweet.StruckTOTweetDAO;
+import ca.gkwb.struckto.tweet.StruckTOTweetVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
 import lombok.Setter;
 import twitter4j.Status;
@@ -21,6 +27,10 @@ public class StruckTOBOImpl implements StruckTOBO {
 	private TwitterConnector tConn;
 	@Setter
 	private StruckTOIncidentDAO stiDAO;
+	@Setter
+	private StruckTOTweetDAO sttDAO;
+	@Setter
+	private StruckTOLocationDAO stlDAO;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -108,9 +118,39 @@ public class StruckTOBOImpl implements StruckTOBO {
 	//** Helper Methods
 	//**********************************************************
 	
-	private void processIncident(Status s) {
+	@Override
+	public void processIncident(Status s) throws FatalException {
+		Calendar cal = Calendar.getInstance();
+		Date now = new Date(cal.getTime().getTime());
+		
+		StruckTOTweetVO sttVO = generateTweetVO(s, now);
+		StruckTOIncidentVO stiVO = generateIncidentVO(sttVO.getTweetId(), now, null);
+			
+		try {
+			stiDAO.insert(stiVO);
+		} catch (GenericDBException e) {
+			throw new FatalException("Error writing to DB -> ", e);
+		}
+	}
+	
+	@Override
+	public StruckTOTweetVO generateTweetVO(Status s, Date d) {
+		String tweetUrl = "http://twitter.com/" + s.getUser() + "/status/" + s.getId();
+		
+		StruckTOTweetVO sttVO = new StruckTOTweetVO(s.getId(), tweetUrl, s.getUser().getName(),
+				s.getText(), d);	
+		return sttVO;			
+	}
+	
+	@Override
+	public StruckTOIncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId) {
+		
 		//create incidentVO from status
-		//TODO
-		StruckTOIncidentVO stVO = new StruckTOIncidentVO();
+		StruckTOIncidentVO stVO = new StruckTOIncidentVO(-1, tweetId, StruckTOIncidentVO.SEVERITY_UNKNOWN,
+				null, date, date, locationId, true
+			);	
+		
+		return stVO;
+		
 	}
 }

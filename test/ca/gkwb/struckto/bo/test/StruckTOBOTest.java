@@ -1,14 +1,18 @@
 package ca.gkwb.struckto.bo.test;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.util.Assert;
 
 import ca.gkwb.struckto.bo.StruckTOBOImpl;
+import ca.gkwb.struckto.incident.StruckTOIncidentVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
 import ca.gkwb.twitter.connector.TwitterConnectorImpl;
 
@@ -48,8 +52,8 @@ public class StruckTOBOTest {
 	public void testQueryAndRetweet() {
 		try {
 			int retweets = stBO.queryAndProcess("TPSOperations",100, toHashtags);
-			retweets = retweets + stBO.queryAndProcess("PeelPoliceMedia",100,peelHashtags);
-			retweets = retweets + stBO.queryAndProcess("YRP",100,yorkHashtags);
+//			retweets = retweets + stBO.queryAndProcess("PeelPoliceMedia",100,peelHashtags);
+//			retweets = retweets + stBO.queryAndProcess("YRP",100,yorkHashtags);
 			
 			logger.debug("New Retweet Count: "+retweets);
 		} catch (Exception e) {
@@ -67,5 +71,20 @@ public class StruckTOBOTest {
 		}
 	}
 	
-
+	@Test
+	public void testGenerateStruckTOIncidentVO() {
+		Calendar cal = Calendar.getInstance();
+		Date now = new Date(cal.getTime().getTime());
+		long tweetId = new Long("740033293530374144"); 
+		int locationId = 2;
+		
+		StruckTOIncidentVO sttVO = stBO.generateIncidentVO(tweetId, now, locationId);
+		
+		Assert.isTrue(tweetId == sttVO.getTweetId());
+		Assert.isTrue(sttVO.getLocationId() == locationId);
+		Assert.isTrue(now.equals(sttVO.getCreateDate()));
+		Assert.isTrue(now.equals(sttVO.getActivityDate()));
+		Assert.isTrue(sttVO.getSeverity().equalsIgnoreCase(StruckTOIncidentVO.SEVERITY_UNKNOWN));
+	}
 }
+

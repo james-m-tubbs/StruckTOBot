@@ -32,41 +32,44 @@ package ca.gkwb.struckto.incident;
 
 import java.sql.Date;
 
-import ca.gkwb.struckto.location.StruckTOLocationVO;
-import ca.gkwb.struckto.tweet.StruckTOTweetVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @AllArgsConstructor
 public class StruckTOIncidentVO {
+
+//  "INCIDENT_ID" serial NOT NULL,
 	@Getter @Setter
-	private String id;
+	private Integer incidentId;
+//  "INCIDENT_TWEET_ID" integer,
 	@Getter @Setter
-	private String tweetId;
-	@Getter @Setter
-	private Date activityDate;
-	@Getter @Setter
-	private Date createDate;
-	@Getter @Setter
-	private String newsUrl;
-	@Getter @Setter
-	private String tweetUrl;
+	private long tweetId;
+//  "INCIDENT_SEVERITY" character varying,
 	@Getter @Setter
 	private String severity;
+//  "INCIDENT_NEWS_URL" character varying,
 	@Getter @Setter
-	private String source;
+	private String newsUrl;
+//  "INCIDENT_CREATE_DATE" date NOT NULL,
 	@Getter @Setter
-	private String user;
+	private Date createDate;
+//  "INCIDENT_ACTIVITY_DATE" date NOT NULL,
 	@Getter @Setter
-	private StruckTOLocationVO location;
+	private Date activityDate;
+//  "INDICDENT_LOCATION_ID" integer,\
 	@Getter @Setter
-	private StruckTOTweetVO tweet;
+	private Integer locationId;
+//  "INCIDENT_VERIFIED" char[1],
+	@Getter @Setter
+	private boolean verified;
 	
 	@Getter
-	public final static String FATAL = "FATAL";
+	public final static String SEVERITY_FATAL = "FATAL";
 	@Getter
-	public final static String SEVERE = "SEVERE";
+	public final static String SEVERITY_SEVERE = "SEVERE";
 	@Getter
-	public final static String MINOR = "MINOR";	
+	public final static String SEVERITY_MINOR = "MINOR";	
+	@Getter
+	public final static String SEVERITY_UNKNOWN = "UNKNOWN";
 }

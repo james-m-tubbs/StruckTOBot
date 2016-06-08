@@ -11,7 +11,7 @@ public class StruckTOTweetVO {
 	
 //	"TWEET_ID" integer NOT NULL PRIMARY KEY,
 	@Getter @Setter
-	private int tweetId;
+	private long tweetId;
 //	"TWEET_URL" character varying,
 	@Getter @Setter
 	private String url;

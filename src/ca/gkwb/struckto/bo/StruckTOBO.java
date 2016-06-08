@@ -1,12 +1,15 @@
 package ca.gkwb.struckto.bo;
 
 
+import java.sql.Date;
 import java.util.List;
 
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
 import ca.gkwb.struckto.incident.StruckTOIncidentVO;
 import ca.gkwb.struckto.location.StruckTOLocationVO;
+import ca.gkwb.struckto.tweet.StruckTOTweetVO;
+import twitter4j.Status;
 
 public interface StruckTOBO {
 	
@@ -40,7 +43,7 @@ public interface StruckTOBO {
 	/**
 	 * Returns a StruckTOLocationVO that matches the input StruckTOIncidentVO.
 	 * 
-	 * @author tubbsj
+	 * @author gingerk1d
 	 * @date 2015-12-02
 	 * @param stVO
 	 * @return StruckTOLocationVO
@@ -52,5 +55,30 @@ public interface StruckTOBO {
 	public String buildHashtagString(List<String> htags);
 	
 	public List<String> parseHashtags(String hashtagString);
+	
+	/**
+	 * Helper method that generates a StruckTOTweetVO object from the input date and status
+	 * 
+	 * @author gingerk1d
+	 * @date 2016-06-07
+	 * @param Status
+	 * @param Date
+	 * @return StruckTOTweetVO
+	 */
+	public StruckTOTweetVO generateTweetVO(Status s, Date d);
+
+	/**
+	 * Helper method that generates a StruckTOIncidentVO object from the input date, locationId, and tweetId
+	 * 
+	 * @author gingerk1d
+	 * @date 2016-06-07
+	 * @param Status
+	 * @param Date
+	 * @paraml Integer
+	 * @return StruckTOIncidentVO
+	 */	
+	public StruckTOIncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId);
+	
+	public void processIncident(Status s) throws FatalException;
 
 }
