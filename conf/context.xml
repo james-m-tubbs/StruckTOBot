@@ -5,11 +5,28 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	  <property name="location">
-	    <value>struckto.properties</value>
+	    <value>jdbc.properties</value>
 	  </property>
-	</bean> -->
+	</bean>
+	
+	<bean id="dataSource" 
+         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<bean id="struckTOIncidentDAO" class="ca.gkwb.struckto.incident.StruckTOIncidentDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>	
+	
+	<bean id="struckTOTwitterDAO" class="ca.gkwb.struckto.tweet.StruckTOTweetDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>		
 
    <bean id="TwitterConnector" class="ca.gkwb.twitter.connector.TwitterConnectorImpl"
       			init-method="connect" destroy-method="disconnect">
@@ -17,6 +34,8 @@
 
    <bean id="StruckTOBO" class="ca.gkwb.struckto.bo.StruckTOBOImpl">
        <property name="tConn" ref="TwitterConnector"/>
+       <property name="stiDAO" ref="struckTOIncidentDAO" />
+       <property name="sttDAO" ref="struckTOTwitterDAO" />
    </bean>
 
 </beans>

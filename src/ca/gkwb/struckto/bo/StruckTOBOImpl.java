@@ -92,11 +92,6 @@ public class StruckTOBOImpl implements StruckTOBO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	public boolean processIncident(StruckTOIncidentVO stVO)
-			throws WarnException, FatalException {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 	public boolean checkRetweeted(Status status, String username) throws WarnException, FatalException {
 		//logger.debug("Retweet UserID: "+status.getCurrentUserRetweetId());
@@ -119,7 +114,8 @@ public class StruckTOBOImpl implements StruckTOBO {
 	//**********************************************************
 	
 	@Override
-	public void processIncident(Status s) throws FatalException {
+	public boolean processIncident(Status s) throws FatalException {
+		logger.debug("Processing Incident : " + s.toString());
 		Calendar cal = Calendar.getInstance();
 		Date now = new Date(cal.getTime().getTime());
 		
@@ -127,18 +123,19 @@ public class StruckTOBOImpl implements StruckTOBO {
 		StruckTOIncidentVO stiVO = generateIncidentVO(sttVO.getTweetId(), now, null);
 			
 		try {
+			sttDAO.insert(sttVO);
 			stiDAO.insert(stiVO);
 		} catch (GenericDBException e) {
 			throw new FatalException("Error writing to DB -> ", e);
 		}
+		return true;
 	}
 	
 	@Override
 	public StruckTOTweetVO generateTweetVO(Status s, Date d) {
-		String tweetUrl = "http://twitter.com/" + s.getUser() + "/status/" + s.getId();
+		String tweetUrl = "http://twitter.com/" + s.getUser().getScreenName() + "/status/" + s.getId();
 		
-		StruckTOTweetVO sttVO = new StruckTOTweetVO(s.getId(), tweetUrl, s.getUser().getName(),
-				s.getText(), d);	
+		StruckTOTweetVO sttVO = new StruckTOTweetVO(s.getId(), tweetUrl, s.getUser().getName(), d);	
 		return sttVO;			
 	}
 	
@@ -150,6 +147,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 				null, date, date, locationId, true
 			);	
 		
+		logger.debug("Generated IncidentVO " + stVO.toString());
 		return stVO;
 		
 	}

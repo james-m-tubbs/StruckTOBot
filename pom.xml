@@ -45,6 +45,12 @@
 	    <artifactId>spring-jdbc</artifactId>
 	    <version>4.2.6.RELEASE</version>
 	</dependency>
+	<!-- http://mvnrepository.com/artifact/postgresql/postgresql -->
+	<dependency>
+	    <groupId>postgresql</groupId>
+	    <artifactId>postgresql</artifactId>
+	    <version>9.1-901.jdbc4</version>
+	</dependency>	
   </dependencies> 
   
   <build>

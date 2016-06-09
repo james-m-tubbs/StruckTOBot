@@ -18,10 +18,12 @@ public class StruckTOTweetVO {
 //	"TWEET_ACCOUNT" character varying,
 	@Getter @Setter
 	private String account;
-//	"TWEET_TEXT" character varying,
-	@Getter @Setter
-	private String text;
 //	"TWEET_TIMESTAMP" date)
+	@Getter @Setter
 	private Date timestamp;
-
+	@Override
+	public String toString() {
+		return "StruckTOTweetVO [tweetId=" + tweetId + ", url=" + url + ", account=" + account + ", timestamp="
+				+ timestamp + "]";
+	}
 }

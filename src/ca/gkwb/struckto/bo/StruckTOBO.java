@@ -28,19 +28,6 @@ public interface StruckTOBO {
 	public List<StruckTOIncidentVO> getNewIncidents() throws FatalException, WarnException;
 	
 	/**
-	 * Processes a single incident into the struckTO db and google maps API. Returns true if processed
-	 * successfully.
-	 * 
-	 * @author gingerk1d
-	 * @date 2015-12-02
-	 * @param stVO
-	 * @return boolean 
-	 * @throws WarnException
-	 * @throws FatalException
-	 */
-	public boolean processIncident(StruckTOIncidentVO stVO) throws WarnException, FatalException;
-	
-	/**
 	 * Returns a StruckTOLocationVO that matches the input StruckTOIncidentVO.
 	 * 
 	 * @author gingerk1d
@@ -79,6 +66,17 @@ public interface StruckTOBO {
 	 */	
 	public StruckTOIncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId);
 	
-	public void processIncident(Status s) throws FatalException;
+	/**
+	 * Processes a single incident into the struckTO db and google maps API. Returns true if processed
+	 * successfully.
+	 * 
+	 * @author gingerk1d
+	 * @date 2015-12-02
+	 * @param status
+	 * @return boolean 
+	 * @throws WarnException
+	 * @throws FatalException
+	 */	
+	public boolean processIncident(Status s) throws FatalException;
 
 }

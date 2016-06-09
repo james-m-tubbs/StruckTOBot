@@ -72,4 +72,11 @@ public class StruckTOIncidentVO {
 	public final static String SEVERITY_MINOR = "MINOR";	
 	@Getter
 	public final static String SEVERITY_UNKNOWN = "UNKNOWN";
+	
+	@Override
+	public String toString() {
+		return "StruckTOIncidentVO [incidentId=" + incidentId + ", tweetId=" + tweetId + ", severity=" + severity
+				+ ", newsUrl=" + newsUrl + ", createDate=" + createDate + ", activityDate=" + activityDate
+				+ ", locationId=" + locationId + ", verified=" + verified + "]";
+	}
 }
