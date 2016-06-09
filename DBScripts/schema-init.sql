@@ -36,10 +36,9 @@ TABLESPACE pg_default;
 --create tweet capture
 CREATE TABLE strucktodb."TWEET"
 (
-  "TWEET_ID" integer NOT NULL PRIMARY KEY,
+  "TWEET_ID" bigint NOT NULL PRIMARY KEY,
   "TWEET_URL" character varying,
   "TWEET_ACCOUNT" character varying,
-  "TWEET_TEXT" character varying,
   "TWEET_TIMESTAMP" date)
 WITH (
   OIDS=FALSE
@@ -50,13 +49,13 @@ TABLESPACE pg_default;
 CREATE TABLE strucktodb."INCIDENT"
 (
   "INCIDENT_ID" serial NOT NULL,
-  "INCIDENT_TWEET_ID" integer,
+  "INCIDENT_TWEET_ID" bigint,
   "INCIDENT_SEVERITY" character varying,
   "INCIDENT_NEWS_URL" character varying,
   "INCIDENT_CREATE_DATE" date NOT NULL,
   "INCIDENT_ACTIVITY_DATE" date NOT NULL,
   "INDICDENT_LOCATION_ID" integer,
-  "INCIDENT_VERIFIED" char[1],
+  "INCIDENT_VERIFIED" character varying,
   CONSTRAINT "INCIDENT_pkey" PRIMARY KEY ("INCIDENT_ID"),
   CONSTRAINT "FK_LOCATION" FOREIGN KEY ("INDICDENT_LOCATION_ID")
       REFERENCES strucktodb."LOCATION" ("LOCATION_ID") MATCH SIMPLE
