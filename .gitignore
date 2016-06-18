@@ -5,3 +5,4 @@ conf/log4j.properties
 .classpath
 .settings/org.eclipse.jdt.core.prefs
 conf/jdbc.properties
+/logs/

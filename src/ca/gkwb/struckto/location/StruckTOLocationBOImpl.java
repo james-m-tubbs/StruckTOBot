@@ -10,18 +10,12 @@ import org.apache.log4j.Logger;
 public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 
 	private String intersectionRegex = "([A-Z]\\w+|[A-Z]\\w+ [A-Z]\\w+) (Ave*|Blvd|Rd|Sq|Cr+|St) *[NSEW]*";
-	private String andRegex = " and ";
-	private String andReplace = " + ";
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
 	@Override
 	public List<String> parseStreetLocation(String inputTweet) {
 		logger.debug("Parsing Location from input tweet:");
-		logger.debug(inputTweet);
-
-		//and causes issuese with two word regex - make it standard as a +
-		inputTweet = inputTweet.replaceAll(andRegex, andReplace);
 		logger.debug(inputTweet);
 		
 		Pattern p = Pattern.compile(intersectionRegex);
