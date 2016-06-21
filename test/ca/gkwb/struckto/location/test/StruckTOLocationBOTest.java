@@ -24,7 +24,7 @@ public class StruckTOLocationBOTest {
 
 	@Before
 	public void setUp() throws Exception {
-		stlBO = new StruckTOLocationBOImpl();
+		stlBO = new StruckTOLocationBOImpl("", "Toronto", "Canada");
 		tConn = new TwitterConnectorImpl();
 		tConn.connect();		
 	}
@@ -56,12 +56,20 @@ public class StruckTOLocationBOTest {
 			List<String> intersection = new ArrayList<String>();
 			intersection.add("Yonge St");
 			intersection.add("Sheppard Ave");
-			List<GeocodingResult> results = stlBO.getGeoData(intersection, "Canada", "Toronto");
+			List<GeocodingResult> results = stlBO.getGeoData(intersection, "Toronto", "Canada");
 			for (int i=0;i<results.size();i++) {
 				GeocodingResult g = results.get(i);
 				logger.debug("For result " + i + " ########################## ");
+				//geometry
 				logger.debug(g.geometry);
-				logger.debug(g.addressComponents);
+				logger.debug(g.geometry.location);
+				logger.debug(g.geometry.location.lat);
+				logger.debug(g.geometry.location.lng);
+				
+				
+				for (int j=0;j<g.addressComponents.length;j++) {
+					logger.debug("AddressComponent " + j + " = " + g.addressComponents[j]);
+				}
 				logger.debug(g.formattedAddress);
 				logger.debug(g.placeId);
 			}
@@ -71,3 +79,4 @@ public class StruckTOLocationBOTest {
 		}
 	}	
 }
+
