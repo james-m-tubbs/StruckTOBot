@@ -77,6 +77,41 @@ public class StruckTOLocationBOTest {
 			e.printStackTrace();
 			Assert.isTrue(false);
 		}
-	}	
+	}
+	
+	@Test
+	public void testQueryLocationsByTweets() {
+		try {
+			List<Status> status = tConn.getStatusByRegex("TPSOperations", tConn.PEDESTRIAN_REGEX, 100);
+			logger.debug(status.size());
+			for (Status s : status) {
+				List<String> intersection = stlBO.parseStreetLocation(s.getText());
+				logger.debug(intersection);
+				Assert.isTrue(intersection.size()==2);
+				
+				List<GeocodingResult> results = stlBO.getGeoData(intersection, "Toronto", "Canada");
+				for (int i=0;i<results.size();i++) {
+					GeocodingResult g = results.get(i);
+					logger.debug("For result " + i + " ########################## ");
+					//geometry
+					logger.debug(g.geometry);
+					logger.debug(g.geometry.location);
+					logger.debug(g.geometry.location.lat);
+					logger.debug(g.geometry.location.lng);
+					
+					
+					for (int j=0;j<g.addressComponents.length;j++) {
+						logger.debug("AddressComponent " + j + " = " + g.addressComponents[j]);
+					}
+					logger.debug(g.formattedAddress);
+					logger.debug(g.placeId);
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.isTrue(false);
+		}
+	}		
 }
 
