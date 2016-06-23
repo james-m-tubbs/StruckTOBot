@@ -8,11 +8,6 @@ import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.NoRowFoundException;
 
 public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOIncidentDAO {
-	
-//	private final String INSERT_SQL = "INSERT INTO INCIDENT (INCIDENT_TWEET_ID, INCIDENT_SEVERITY, INCIDENT_NEWS_URL" +
-//			"INCIDENT_CREATE_DATE, INCIDENT_ACTIVITY_DATE, INDICDENT_LOCATION_ID, INCIDENT_VERIFIED) " +
-//			"values " +
-//		"?, ?, ?, CAST(? AS DATE), CAST(? AS DATE), ?, ?";	
 //	
 	private final String INSERT_SQL = "INSERT INTO strucktodb.\"INCIDENT\"(" +
             "\"INCIDENT_TWEET_ID\", \"INCIDENT_SEVERITY\", \"INCIDENT_NEWS_URL\"," + 

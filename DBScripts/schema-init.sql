@@ -33,6 +33,9 @@ WITH (
 
 TABLESPACE pg_default;
 
+--added to ensure we keep locations unique
+alter table strucktodb."LOCATION" ADD CONSTRAINT pk_incident UNIQUE ("LOCATION_LAT","LOCATION_LONG");
+
 --create tweet capture
 CREATE TABLE strucktodb."TWEET"
 (

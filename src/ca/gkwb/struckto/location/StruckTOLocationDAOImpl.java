@@ -4,13 +4,20 @@ import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import ca.gkwb.struckto.exception.GenericDBException;
 
-public class StruckTOLocationDAOImpl implements StruckTOLocationDAO {
+public class StruckTOLocationDAOImpl extends JdbcDaoSupport implements StruckTOLocationDAO {
 	
 	private JdbcTemplate conn;
 	private final String INSERT_SQL = "";
+	
+//	private final String INSERT_SQL = "INSERT INTO strucktodb.\"INCIDENT\"(" +
+//            "\"INCIDENT_TWEET_ID\", \"INCIDENT_SEVERITY\", \"INCIDENT_NEWS_URL\"," + 
+//            "\"INCIDENT_CREATE_DATE\", \"INCIDENT_ACTIVITY_DATE\", \"INDICDENT_LOCATION_ID\"," + 
+//            "\"INCIDENT_VERIFIED\") VALUES (?, ?, ?, ?, ?, ?, ? );";	
+	
 	private final String UPDATE_SQL = "";
 	private final String QUERY_SQL = "SELECT " +
 			   "LOCATION_ID," +
@@ -22,7 +29,7 @@ public class StruckTOLocationDAOImpl implements StruckTOLocationDAO {
 			   "LOCATION_CREATE_DATE," + 
 			   "LOCATION_USER," +			
 			 "FROM LOCATION " +
-			 "WHERE LOCATION_ID = ? ";
+			 "WHERE LOCATION_LAT = ? ";
 	
 	public StruckTOLocationDAOImpl(JdbcTemplate conn) {
 		this.conn = conn;

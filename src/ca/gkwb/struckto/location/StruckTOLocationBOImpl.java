@@ -1,6 +1,8 @@
 package ca.gkwb.struckto.location;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +15,9 @@ import com.google.maps.model.ComponentFilter;
 import com.google.maps.model.GeocodingResult;
 
 import ca.gkwb.struckto.exception.FatalException;
+import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
+import lombok.Setter;
 
 public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 
@@ -23,12 +27,20 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
     private	GeoApiContext context;
     private String country;
     private String city;
+    
+    @Setter
+    private StruckTOLocationDAO stlDAO;
+    
+    @Setter
+    private boolean dbFlag = true;
+    
+    @Setter
+    private boolean mapFlag = true;
 	
 	public StruckTOLocationBOImpl(String apiKey, String city, String country) {
 		context = new GeoApiContext().setApiKey(apiKey);
 	}
 	
-	@Override
 	/**
 	 * Returns an intersection list (two values) based on input tweet text
 	 * 
@@ -37,6 +49,7 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 	 * @param inputTweet
 	 * @return List<String>
 	 */	
+	@Override
 	public List<String> parseStreetLocation(String inputTweet) {
 		logger.debug("Parsing Location from input tweet:");
 		logger.debug(inputTweet);
@@ -52,31 +65,19 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 		}
 		return results;
 	}
-
+	
 	/**
-	 * Processes one record based on input tweet text. Depending on enabled features, will
-	 * parse the location LAT+LNG, save to DB, drop a pin on the associated map
+	 * Returns a list of GeocodingResults based on input intersection String (ex. List = {"Yonge St","Sheppard Ave"},
+	 * input country, and input city
 	 * 
 	 * @author g1ng3rk1d
 	 * @date 2016-06-22
-	 * @param inputTweet
+	 * @param intersection
+	 * @param country
+	 * @param city
+	 * @return
 	 * @throws WarnException
-	 * @throws FatalException
 	 */	
-	@Override
-	public void processOneTweet(String tweetText) throws WarnException, FatalException {
-		List<String> intersection = parseStreetLocation(tweetText);
-		List<GeocodingResult> res = getGeoData(intersection, city, country);
-		GeocodingResult topRes;
-		if (res.size() > 0)  topRes = res.get(0);
-		
-		//create geolocation object
-		//StruckTOLocationVO stlVO = new StruckTOLocationVO( );
-//		topRes.geometry.location.lat;
-//		topRes.geometry.location.lng;
-		
-	}
-	
 	@Override
 	public List<GeocodingResult> getGeoData(List<String> intersection, String city, String country ) throws WarnException {
 		//rebuild address into single string
@@ -107,5 +108,47 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 			throw new WarnException(e);
 		}
 	}
+	
+	/**
+	 * Processes one record based on input tweet text. Depending on enabled features, will
+	 * parse the location LAT+LNG, save to DB, drop a pin on the associated map
+	 * 
+	 * @author g1ng3rk1d
+	 * @date 2016-06-22
+	 * @param inputTweet
+	 * @throws WarnException
+	 * @throws FatalException
+	 */	
+	@Override
+	public void processOneTweet(String tweetText) throws WarnException, FatalException {
+		List<String> intersection = parseStreetLocation(tweetText);
+		List<GeocodingResult> res = getGeoData(intersection, city, country);
+		GeocodingResult topRes = null;
+		if (res.size() > 0)  topRes = res.get(0);
+		
+		//create geolocation object
+		if (dbFlag && topRes != null) {	
+			Calendar cal = Calendar.getInstance();
+			Date sqlDate = new Date(cal.getTime().getTime());
+			StruckTOLocationVO stlVO = new StruckTOLocationVO(
+					-1,
+					topRes.geometry.location.lat,
+					topRes.geometry.location.lng,
+					city,
+					"ON",
+					country,
+					sqlDate,
+					"StruckTOBot"
+					);
+			logger.debug("Created stlVO: " + stlVO);
+			try {
+				stlDAO.insertStruckTOLocation(stlVO);
+			} catch (GenericDBException e) {
+				logger.error("Couldn't insert stlVO", e);
+				throw new FatalException(e);
+			}
+		}
+		
+	}	
 
 }

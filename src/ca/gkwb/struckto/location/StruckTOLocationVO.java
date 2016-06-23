@@ -15,11 +15,11 @@ public class StruckTOLocationVO {
 	
    //"LOCATION_LAT," +
 	@Getter @Setter
-	private float lat;
+	private double lat;
 	
 //  "LOCATION_LONG," +
 	@Getter @Setter
-	private float lng;
+	private double lng;
 	
 //  "LOCATION_CITY," +
 	@Getter @Setter
@@ -39,5 +39,11 @@ public class StruckTOLocationVO {
 	
 //  "LOCATION_USER,"
 	@Getter @Setter
-	private String user;	
+	private String user;
+
+	@Override
+	public String toString() {
+		return "StruckTOLocationVO [id=" + id + ", lat=" + lat + ", lng=" + lng + ", city=" + city + ", prov=" + prov
+				+ ", country=" + country + ", create_date=" + create_date + ", user=" + user + "]";
+	}	
 }

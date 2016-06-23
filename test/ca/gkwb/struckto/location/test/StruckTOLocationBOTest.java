@@ -112,6 +112,20 @@ public class StruckTOLocationBOTest {
 			e.printStackTrace();
 			Assert.isTrue(false);
 		}
-	}		
+	}
+	
+	@Test
+	public void testProcessTweets() {
+		try {
+			List<Status> status = tConn.getStatusByRegex("TPSOperations", tConn.PEDESTRIAN_REGEX, 100);
+			logger.debug(status.size());
+			for (Status s : status) {
+				stlBO.processOneTweet(s.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.isTrue(false);
+		}
+	}	
 }
 
