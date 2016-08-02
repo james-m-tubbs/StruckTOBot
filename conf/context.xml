@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+            xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                                                    http://www.springframework.org/schema/jdbc
+                                                    http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
 
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 	  <property name="location">
@@ -11,14 +14,18 @@
 	  </property>
 	</bean>
 	
-	<bean id="dataSource" 
+	<!-- <bean id="dataSource" 
          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="${jdbc.driver}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.user}" />
 		<property name="password" value="${jdbc.password}" />
-	</bean>
+	</bean> -->
+	
+	<jdbc:embedded-database id="dataSource" type="HSQL">
+	    <jdbc:script location="classpath:test-schema-init.sql"/>
+	</jdbc:embedded-database>	
 	
 	<bean id="struckTOIncidentDAO" class="ca.gkwb.struckto.incident.StruckTOIncidentDAOImpl">
 		<property name="dataSource" ref="dataSource" />

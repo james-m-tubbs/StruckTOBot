@@ -16,7 +16,7 @@ public interface StruckTOIncidentDAO {
 	 * @return StruckTOIncidentVO
 	 * @throws GenericDBException
 	 */
-	public StruckTOIncidentVO queryById(String id) throws GenericDBException;
+	public StruckTOIncidentVO queryById(int id) throws GenericDBException;
 	
 	/**
 	 * Queries a single IncidentVO based on input tweet ID. Returns null if no results.

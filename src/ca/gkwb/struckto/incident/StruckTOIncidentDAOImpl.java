@@ -1,7 +1,10 @@
 package ca.gkwb.struckto.incident;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import ca.gkwb.struckto.exception.GenericDBException;
@@ -14,9 +17,11 @@ public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOI
             "\"INCIDENT_CREATE_DATE\", \"INCIDENT_ACTIVITY_DATE\", \"INDICDENT_LOCATION_ID\"," + 
             "\"INCIDENT_VERIFIED\") VALUES (?, ?, ?, ?, ?, ?, ? );";
 	
-	public StruckTOIncidentVO queryById(String id) throws GenericDBException {
-		// TODO Auto-generated method stub
-		return null;
+	private final String QUERY_SQL = "SELECT * FROM strucktodb.\"INCIDENT\" WHERE +"
+			+ "\"INCIDENT_TWEET_ID\" = ?";
+	
+	public StruckTOIncidentVO queryById(int id) throws GenericDBException {
+		return (StruckTOIncidentVO)getJdbcTemplate().queryForObject(QUERY_SQL, new Object[]{id}, new StruckTOIncidentRowMapper());
 	}
 
 	public StruckTOIncidentVO queryByTwitterId(String id) throws NoRowFoundException, GenericDBException {
@@ -42,5 +47,24 @@ public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOI
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public class StruckTOIncidentRowMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+			boolean verified = false;
+			if (rs.getString("INCIDENT_VERIFIED").equalsIgnoreCase("Y")) verified = true;
+			StruckTOIncidentVO res = new StruckTOIncidentVO(
+					rs.getInt("INCIDENT_ID"),
+					rs.getLong("INCIDENT_TWEET_ID"),
+					rs.getString("INCIDENT_SEVERITY"),
+					rs.getString("INCIDENT_NEWS_URL"),
+				    rs.getDate("INCIDENT_CREATE_DATE"),
+				    rs.getDate("INCIDENT_ACTIVITY_DATE"),
+				    rs.getInt("INCIDENT_LOCATION_ID"),
+				    verified
+					);
+			return res;
+		}
+	}	
 
 }
