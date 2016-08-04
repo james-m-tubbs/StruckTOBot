@@ -120,6 +120,7 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 	 * @throws FatalException
 	 */	
 	@Override
+	//TODO have this return a int matching created location
 	public void processOneTweet(String tweetText) throws WarnException, FatalException {
 		List<String> intersection = parseStreetLocation(tweetText);
 		List<GeocodingResult> res = getGeoData(intersection, city, country);

@@ -13,7 +13,7 @@ import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
 import ca.gkwb.struckto.incident.StruckTOIncidentDAO;
 import ca.gkwb.struckto.incident.StruckTOIncidentVO;
-import ca.gkwb.struckto.location.StruckTOLocationDAO;
+import ca.gkwb.struckto.location.StruckTOLocationBO;
 import ca.gkwb.struckto.location.StruckTOLocationVO;
 import ca.gkwb.struckto.tweet.StruckTOTweetDAO;
 import ca.gkwb.struckto.tweet.StruckTOTweetVO;
@@ -30,7 +30,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 	@Setter
 	private StruckTOTweetDAO sttDAO;
 	@Setter
-	private StruckTOLocationDAO stlDAO;
+	private StruckTOLocationBO stlBO;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -150,5 +150,14 @@ public class StruckTOBOImpl implements StruckTOBO {
 		logger.debug("Generated IncidentVO " + stVO.toString());
 		return stVO;
 		
+	}
+
+	@Override
+	public void generateLocationVO(Status s) throws FatalException {
+		try {
+			stlBO.processOneTweet(s.getText());
+		} catch (WarnException e) {
+			logger.error("WarnException on parsing tweet location", e);
+		}
 	}
 }

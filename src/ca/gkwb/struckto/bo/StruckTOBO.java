@@ -78,5 +78,15 @@ public interface StruckTOBO {
 	 * @throws FatalException
 	 */	
 	public boolean processIncident(Status s) throws FatalException;
+	
+	/**
+	 * Process a single status and returns a location VO
+	 * 
+	 * @author gingerk1d
+	 * @date 2016-08-04
+	 * @param Status
+	 * @throws FatalException
+	 */
+	public void generateLocationVO(Status s) throws FatalException;
 
 }
