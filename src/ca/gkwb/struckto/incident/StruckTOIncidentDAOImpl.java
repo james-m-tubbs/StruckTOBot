@@ -14,7 +14,7 @@ public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOI
 //	
 	private final String INSERT_SQL = "INSERT INTO strucktodb.\"INCIDENT\"(" +
             "\"INCIDENT_TWEET_ID\", \"INCIDENT_SEVERITY\", \"INCIDENT_NEWS_URL\"," + 
-            "\"INCIDENT_CREATE_DATE\", \"INCIDENT_ACTIVITY_DATE\", \"INDICDENT_LOCATION_ID\"," + 
+            "\"INCIDENT_CREATE_DATE\", \"INCIDENT_ACTIVITY_DATE\", \"INCIDENT_LOCATION_ID\"," + 
             "\"INCIDENT_VERIFIED\") VALUES (?, ?, ?, ?, ?, ?, ? );";
 	
 	private final String QUERY_SQL = "SELECT * FROM strucktodb.\"INCIDENT\" WHERE "

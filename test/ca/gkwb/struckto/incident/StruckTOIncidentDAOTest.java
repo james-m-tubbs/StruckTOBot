@@ -8,6 +8,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
+import ca.gkwb.struckto.incident.StruckTOIncidentDAO;
+import ca.gkwb.struckto.incident.StruckTOIncidentVO;
+
 public class StruckTOIncidentDAOTest {
 
 	StruckTOIncidentDAO stiDAO;
