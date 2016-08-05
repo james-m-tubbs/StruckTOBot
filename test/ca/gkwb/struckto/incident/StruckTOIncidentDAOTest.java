@@ -8,25 +8,25 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.gkwb.struckto.incident.StruckTOIncidentDAO;
-import ca.gkwb.struckto.incident.StruckTOIncidentVO;
+import ca.gkwb.struckto.incident.IncidentDAO;
+import ca.gkwb.struckto.incident.IncidentVO;
 
 public class StruckTOIncidentDAOTest {
 
-	StruckTOIncidentDAO stiDAO;
+	IncidentDAO stiDAO;
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
 	@Before
 	public void setUp() throws Exception {
 		ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
 		System.setProperty("spring.profiles.active", "test1");
-		stiDAO = (StruckTOIncidentDAO)context.getBean("struckTOIncidentDAO");
+		stiDAO = (IncidentDAO)context.getBean("struckTOIncidentDAO");
 	}	
 	
 	@Test
 	public void testQueryById() {
 		try {
-			StruckTOIncidentVO stiVO = stiDAO.queryById(1);
+			IncidentVO stiVO = stiDAO.queryById(1);
 			Assert.assertTrue(stiVO.getIncidentId() == 1);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,7 +41,7 @@ public class StruckTOIncidentDAOTest {
 			//TODO
 			stiDAO.insert(null);
 			
-			StruckTOIncidentVO stiVO = stiDAO.queryById(1);
+			IncidentVO stiVO = stiDAO.queryById(1);
 			Assert.assertTrue(stiVO.getIncidentId() == 1);
 		} catch (Exception e) {
 			e.printStackTrace();

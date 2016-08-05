@@ -1,25 +1,28 @@
 package ca.gkwb.struckto.tweet;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import ca.gkwb.struckto.exception.GenericDBException;
-import ca.gkwb.struckto.location.StruckTOLocationDAO;
-import ca.gkwb.struckto.location.StruckTOLocationVO;
 
-public class StruckTOTweetDAOImpl extends JdbcDaoSupport implements StruckTOTweetDAO {
+public class TweetDAOImpl extends JdbcDaoSupport implements TweetDAO {
 
 	private final String INSERT_SQL = "INSERT INTO strucktodb.\"TWEET\"("+
             "\"TWEET_ID\", \"TWEET_URL\", \"TWEET_ACCOUNT\", \"TWEET_TIMESTAMP\") "+
             "VALUES (?, ?, ?, ?)";
 
 	@Override
-	public void insert(StruckTOTweetVO sttVO) throws GenericDBException {
+	public void insert(TweetVO sttVO) throws GenericDBException {
+		try {
 		getJdbcTemplate().update(INSERT_SQL, sttVO.getTweetId(), sttVO.getUrl(), 
-				sttVO.getAccount(), sttVO.getTimestamp()); 
+				sttVO.getAccount(), sttVO.getTimestamp());
+		} catch (DuplicateKeyException e) {
+			logger.info("Tweet Exists in DB");
+		}
 	}
 
 	@Override
-	public void update(StruckTOTweetVO sttVO) throws GenericDBException {
+	public void update(TweetVO sttVO) throws GenericDBException {
 		// TODO Auto-generated method stub
 		
 	}

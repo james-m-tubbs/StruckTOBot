@@ -7,26 +7,27 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 
 import com.google.maps.model.GeocodingResult;
 
-import ca.gkwb.struckto.location.StruckTOLocationBOImpl;
+import ca.gkwb.struckto.location.LocationBO;
 import ca.gkwb.twitter.connector.TwitterConnector;
-import ca.gkwb.twitter.connector.TwitterConnectorImpl;
 import twitter4j.Status;
 
-public class StruckTOLocationBOTest {
+public class LocationBOTest {
 
 	TwitterConnector tConn;
-	StruckTOLocationBOImpl stlBO;
+	LocationBO stlBO;
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Before
 	public void setUp() throws Exception {
-		stlBO = new StruckTOLocationBOImpl("", "Toronto", "Canada");
-		tConn = new TwitterConnectorImpl();
-		tConn.connect();		
+		ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
+		stlBO = (LocationBO)context.getBean("struckTOLocationBO");	
+		tConn = (TwitterConnector)context.getBean("TwitterConnector");
 	}
 
 	@After

@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.NoRowFoundException;
 
-public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOIncidentDAO {
+public class IncidentDAOImpl extends JdbcDaoSupport implements IncidentDAO {
 //	
 	private final String INSERT_SQL = "INSERT INTO strucktodb.\"INCIDENT\"(" +
             "\"INCIDENT_TWEET_ID\", \"INCIDENT_SEVERITY\", \"INCIDENT_NEWS_URL\"," + 
@@ -20,21 +20,21 @@ public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOI
 	private final String QUERY_SQL = "SELECT * FROM strucktodb.\"INCIDENT\" WHERE "
 			+ "\"INCIDENT_ID\" = ?";
 	
-	public StruckTOIncidentVO queryById(int id) throws GenericDBException {
-		return (StruckTOIncidentVO)getJdbcTemplate().queryForObject(QUERY_SQL, new Object[]{id}, new StruckTOIncidentRowMapper());
+	public IncidentVO queryById(int id) throws GenericDBException {
+		return (IncidentVO)getJdbcTemplate().queryForObject(QUERY_SQL, new Object[]{id}, new StruckTOIncidentRowMapper());
 	}
 
-	public StruckTOIncidentVO queryByTwitterId(String id) throws NoRowFoundException, GenericDBException {
+	public IncidentVO queryByTwitterId(String id) throws NoRowFoundException, GenericDBException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void update(StruckTOIncidentVO stVO) throws GenericDBException {
+	public void update(IncidentVO stVO) throws GenericDBException {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void insert(StruckTOIncidentVO stVO) throws GenericDBException {
+	public void insert(IncidentVO stVO) throws GenericDBException {
 		logger.debug("Inserting StruckTOIncidentVO : " + stVO);
 		char verified = 'N';
 		if (stVO.isVerified()) verified = 'Y';
@@ -43,7 +43,7 @@ public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOI
 				stVO.getCreateDate(), stVO.getActivityDate(), stVO.getLocationId(), verified);
 	}
 
-	public List<StruckTOIncidentVO> queryAll(StruckTOIncidentVO stVO) throws NoRowFoundException, GenericDBException {
+	public List<IncidentVO> queryAll(IncidentVO stVO) throws NoRowFoundException, GenericDBException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -53,7 +53,7 @@ public class StruckTOIncidentDAOImpl extends JdbcDaoSupport implements StruckTOI
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			boolean verified = false;
 			if (rs.getString("INCIDENT_VERIFIED").equalsIgnoreCase("Y")) verified = true;
-			StruckTOIncidentVO res = new StruckTOIncidentVO(
+			IncidentVO res = new IncidentVO(
 					rs.getInt("INCIDENT_ID"),
 					rs.getLong("INCIDENT_TWEET_ID"),
 					rs.getString("INCIDENT_SEVERITY"),

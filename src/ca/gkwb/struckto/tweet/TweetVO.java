@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @AllArgsConstructor
-public class StruckTOTweetVO {
+public class TweetVO {
 	
 //	"TWEET_ID" integer NOT NULL PRIMARY KEY,
 	@Getter @Setter

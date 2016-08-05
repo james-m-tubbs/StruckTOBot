@@ -19,9 +19,9 @@ import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
 import lombok.Setter;
 
-public class StruckTOLocationBOImpl implements StruckTOLocationBO {
+public class LocationBOImpl implements LocationBO {
 
-	private String intersectionRegex = "([A-Z]\\w+|[A-Z]\\w+ [A-Z]\\w+) (Ave*|Blvd|Rd|Sq|Cr+|St|Tr|Dr) *[NSEW]*";
+	private String intersectionRegex = "([A-Z]\\w+|[A-Z]\\w+ [A-Z]\\w+) ([Aa]ve*|Blvd|Rd|Sq|Cr+|St|Tr|Dr|Road) *[NSEW]*";
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
     private	GeoApiContext context;
@@ -29,7 +29,7 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
     private String city;
     
     @Setter
-    private StruckTOLocationDAO stlDAO;
+    private LocationDAO stlDAO;
     
     @Setter
     private boolean dbFlag = true;
@@ -37,8 +37,10 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
     @Setter
     private boolean mapFlag = true;
 	
-	public StruckTOLocationBOImpl(String apiKey, String city, String country) {
+	public LocationBOImpl(String apiKey, String city, String country) {
 		context = new GeoApiContext().setApiKey(apiKey);
+		this.city = city;
+		this.country = country;
 	}
 	
 	/**
@@ -120,18 +122,18 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 	 * @throws FatalException
 	 */	
 	@Override
-	//TODO have this return a int matching created location
-	public void processOneTweet(String tweetText) throws WarnException, FatalException {
+	public LocationVO processOneTweet(String tweetText) throws WarnException, FatalException {
 		List<String> intersection = parseStreetLocation(tweetText);
 		List<GeocodingResult> res = getGeoData(intersection, city, country);
+		logger.debug("Geocode Results: " + res);
 		GeocodingResult topRes = null;
 		if (res.size() > 0)  topRes = res.get(0);
-		
+		LocationVO stlVO = null;
 		//create geolocation object
 		if (dbFlag && topRes != null) {	
 			Calendar cal = Calendar.getInstance();
 			Date sqlDate = new Date(cal.getTime().getTime());
-			StruckTOLocationVO stlVO = new StruckTOLocationVO(
+			stlVO = new LocationVO(
 					-1,
 					topRes.geometry.location.lat,
 					topRes.geometry.location.lng,
@@ -143,13 +145,18 @@ public class StruckTOLocationBOImpl implements StruckTOLocationBO {
 					);
 			logger.debug("Created stlVO: " + stlVO);
 			try {
+				LocationVO checkLocationExists = stlDAO.queryByLatLng(stlVO.getLat(), stlVO.getLng());
+				if (checkLocationExists != null) return checkLocationExists;
+				
+				//if doesn't exist, insert and return newest
 				stlDAO.insertStruckTOLocation(stlVO);
+				stlVO = stlDAO.queryNewestLocation();
 			} catch (GenericDBException e) {
 				logger.error("Couldn't insert stlVO", e);
 				throw new FatalException(e);
 			}
 		}
-		
+		return stlVO;		
 	}	
 
 }

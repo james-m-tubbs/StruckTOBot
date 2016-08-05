@@ -5,7 +5,7 @@ import java.util.List;
 import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.NoRowFoundException;
 
-public interface StruckTOIncidentDAO {
+public interface IncidentDAO {
 	
 	/**
 	 * Queries a single IncidentVO based on input ID. Returns null if no results.
@@ -16,7 +16,7 @@ public interface StruckTOIncidentDAO {
 	 * @return StruckTOIncidentVO
 	 * @throws GenericDBException
 	 */
-	public StruckTOIncidentVO queryById(int id) throws GenericDBException;
+	public IncidentVO queryById(int id) throws GenericDBException;
 	
 	/**
 	 * Queries a single IncidentVO based on input tweet ID. Returns null if no results.
@@ -27,7 +27,7 @@ public interface StruckTOIncidentDAO {
 	 * @return StruckTOIncidentVO
 	 * @throws GenericDBException
 	 */
-	public StruckTOIncidentVO queryByTwitterId(String id) throws NoRowFoundException, GenericDBException;
+	public IncidentVO queryByTwitterId(String id) throws NoRowFoundException, GenericDBException;
 	
 	/**
 	 * Updates a single incident based on the input StruckTOIncidentVO. Requires stVO.id.
@@ -37,7 +37,7 @@ public interface StruckTOIncidentDAO {
 	 * @param stVO
 	 * @throws GenericDBException
 	 */
-	public void update(StruckTOIncidentVO stVO) throws GenericDBException;
+	public void update(IncidentVO stVO) throws GenericDBException;
 	
 	/**
 	 * Inserts a single struckTincidentOIncidentVO based on the input StruckTOIncidentVO.
@@ -48,7 +48,7 @@ public interface StruckTOIncidentDAO {
 	 * @param stVO
 	 * @throws GenericDBException
 	 */
-	public void insert(StruckTOIncidentVO stVO) throws GenericDBException;
+	public void insert(IncidentVO stVO) throws GenericDBException;
 	
 	/**
 	 * Queries a list of StruckTOIncidentVOs based on the input variable. If fields are null
@@ -61,7 +61,7 @@ public interface StruckTOIncidentDAO {
 	 * @throws NoRowFoundException
 	 * @throws GenericDBException
 	 */
-	public List<StruckTOIncidentVO> queryAll(StruckTOIncidentVO stVO)	 
+	public List<IncidentVO> queryAll(IncidentVO stVO)	 
 			throws NoRowFoundException, GenericDBException;
 
 }

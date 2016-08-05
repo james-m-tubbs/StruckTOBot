@@ -6,9 +6,9 @@ import java.util.List;
 
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
-import ca.gkwb.struckto.incident.StruckTOIncidentVO;
-import ca.gkwb.struckto.location.StruckTOLocationVO;
-import ca.gkwb.struckto.tweet.StruckTOTweetVO;
+import ca.gkwb.struckto.incident.IncidentVO;
+import ca.gkwb.struckto.location.LocationVO;
+import ca.gkwb.struckto.tweet.TweetVO;
 import twitter4j.Status;
 
 public interface StruckTOBO {
@@ -25,7 +25,7 @@ public interface StruckTOBO {
 	 * @throws FatalException
 	 * @throws WarnException
 	 */
-	public List<StruckTOIncidentVO> getNewIncidents() throws FatalException, WarnException;
+	public List<IncidentVO> getNewIncidents() throws FatalException, WarnException;
 	
 	/**
 	 * Returns a StruckTOLocationVO that matches the input StruckTOIncidentVO.
@@ -37,7 +37,7 @@ public interface StruckTOBO {
 	 * @throws WarnException
 	 * @throws FatalException
 	 */
-	public StruckTOLocationVO getLocationVOForIncident(StruckTOIncidentVO stVO) throws WarnException, FatalException;
+	public LocationVO getLocationVOForIncident(IncidentVO stVO) throws WarnException, FatalException;
 	
 	public String buildHashtagString(List<String> htags);
 	
@@ -52,7 +52,7 @@ public interface StruckTOBO {
 	 * @param Date
 	 * @return StruckTOTweetVO
 	 */
-	public StruckTOTweetVO generateTweetVO(Status s, Date d);
+	public TweetVO generateTweetVO(Status s, Date d);
 
 	/**
 	 * Helper method that generates a StruckTOIncidentVO object from the input date, locationId, and tweetId
@@ -64,7 +64,7 @@ public interface StruckTOBO {
 	 * @paraml Integer
 	 * @return StruckTOIncidentVO
 	 */	
-	public StruckTOIncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId);
+	public IncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId);
 	
 	/**
 	 * Processes a single incident into the struckTO db and google maps API. Returns true if processed
@@ -85,8 +85,9 @@ public interface StruckTOBO {
 	 * @author gingerk1d
 	 * @date 2016-08-04
 	 * @param Status
+	 * @return 
 	 * @throws FatalException
 	 */
-	public void generateLocationVO(Status s) throws FatalException;
+	public LocationVO generateLocationVO(Status s) throws FatalException;
 
 }

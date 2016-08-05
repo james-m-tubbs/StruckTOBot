@@ -37,7 +37,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @AllArgsConstructor
-public class StruckTOIncidentVO {
+public class IncidentVO {
 
 //  "INCIDENT_ID" serial NOT NULL,
 	@Getter @Setter

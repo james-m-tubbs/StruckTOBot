@@ -4,10 +4,12 @@ import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-public class StruckTOLocationVO {
+@NoArgsConstructor
+public class LocationVO {
 
 	//"LOCATION_ID," +
 	@Getter @Setter

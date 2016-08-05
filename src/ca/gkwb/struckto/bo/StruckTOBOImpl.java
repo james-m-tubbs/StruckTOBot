@@ -11,12 +11,12 @@ import org.apache.log4j.Logger;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
-import ca.gkwb.struckto.incident.StruckTOIncidentDAO;
-import ca.gkwb.struckto.incident.StruckTOIncidentVO;
-import ca.gkwb.struckto.location.StruckTOLocationBO;
-import ca.gkwb.struckto.location.StruckTOLocationVO;
-import ca.gkwb.struckto.tweet.StruckTOTweetDAO;
-import ca.gkwb.struckto.tweet.StruckTOTweetVO;
+import ca.gkwb.struckto.incident.IncidentDAO;
+import ca.gkwb.struckto.incident.IncidentVO;
+import ca.gkwb.struckto.location.LocationBO;
+import ca.gkwb.struckto.location.LocationVO;
+import ca.gkwb.struckto.tweet.TweetDAO;
+import ca.gkwb.struckto.tweet.TweetVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
 import lombok.Setter;
 import twitter4j.Status;
@@ -26,11 +26,11 @@ public class StruckTOBOImpl implements StruckTOBO {
 	@Setter
 	private TwitterConnector tConn;
 	@Setter
-	private StruckTOIncidentDAO stiDAO;
+	private IncidentDAO stiDAO;
 	@Setter
-	private StruckTOTweetDAO sttDAO;
+	private TweetDAO sttDAO;
 	@Setter
-	private StruckTOLocationBO stlBO;
+	private LocationBO stlBO;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -87,7 +87,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 		return retStr;
 	}
 	
-	public List<StruckTOIncidentVO> getNewIncidents() throws FatalException,
+	public List<IncidentVO> getNewIncidents() throws FatalException,
 			WarnException {
 		// TODO Auto-generated method stub
 		return null;
@@ -98,7 +98,7 @@ public class StruckTOBOImpl implements StruckTOBO {
 		return status.isRetweetedByMe();
 	}
 	
-	public StruckTOLocationVO getLocationVOForIncident(StruckTOIncidentVO stVO)
+	public LocationVO getLocationVOForIncident(IncidentVO stVO)
 			throws WarnException, FatalException {
 		// TODO Auto-generated method stub
 		return null;
@@ -119,8 +119,11 @@ public class StruckTOBOImpl implements StruckTOBO {
 		Calendar cal = Calendar.getInstance();
 		Date now = new Date(cal.getTime().getTime());
 		
-		StruckTOTweetVO sttVO = generateTweetVO(s, now);
-		StruckTOIncidentVO stiVO = generateIncidentVO(sttVO.getTweetId(), now, null);
+		LocationVO stlVO = generateLocationVO(s);
+		TweetVO sttVO = generateTweetVO(s, now);
+		Integer locationId = null;
+		if (stlVO != null) locationId = stlVO.getId();
+		IncidentVO stiVO = generateIncidentVO(sttVO.getTweetId(), now, locationId);
 			
 		try {
 			sttDAO.insert(sttVO);
@@ -132,18 +135,19 @@ public class StruckTOBOImpl implements StruckTOBO {
 	}
 	
 	@Override
-	public StruckTOTweetVO generateTweetVO(Status s, Date d) {
+	public TweetVO generateTweetVO(Status s, Date d) {
 		String tweetUrl = "http://twitter.com/" + s.getUser().getScreenName() + "/status/" + s.getId();
 		
-		StruckTOTweetVO sttVO = new StruckTOTweetVO(s.getId(), tweetUrl, s.getUser().getName(), d);	
+		TweetVO sttVO = new TweetVO(s.getId(), tweetUrl, s.getUser().getName(), d);	
+		logger.debug("Generated TweetVO: " + sttVO);
 		return sttVO;			
 	}
 	
 	@Override
-	public StruckTOIncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId) {
+	public IncidentVO generateIncidentVO(long tweetId, Date date, Integer locationId) {
 		
 		//create incidentVO from status
-		StruckTOIncidentVO stVO = new StruckTOIncidentVO(-1, tweetId, StruckTOIncidentVO.SEVERITY_UNKNOWN,
+		IncidentVO stVO = new IncidentVO(-1, tweetId, IncidentVO.SEVERITY_UNKNOWN,
 				null, date, date, locationId, true
 			);	
 		
@@ -153,11 +157,15 @@ public class StruckTOBOImpl implements StruckTOBO {
 	}
 
 	@Override
-	public void generateLocationVO(Status s) throws FatalException {
+	public LocationVO generateLocationVO(Status s) throws FatalException {
+		LocationVO stlVO = null;
+		logger.debug("Status to parse: " + s);
 		try {
-			stlBO.processOneTweet(s.getText());
+			stlVO = stlBO.processOneTweet(s.getText());
 		} catch (WarnException e) {
 			logger.error("WarnException on parsing tweet location", e);
 		}
+		logger.debug("Generated LocationVO : " + stlVO);
+		return stlVO;
 	}
 }

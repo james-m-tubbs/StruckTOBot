@@ -7,7 +7,7 @@ import com.google.maps.model.GeocodingResult;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
 
-public interface StruckTOLocationBO {
+public interface LocationBO {
 	
 	/**
 	 * Returns an intersection list (two values) based on input tweet text
@@ -43,6 +43,6 @@ public interface StruckTOLocationBO {
 	 * @throws WarnException
 	 * @throws FatalException
 	 */
-	public void processOneTweet(String inputTweet) throws WarnException, FatalException;	
+	public LocationVO processOneTweet(String inputTweet) throws WarnException, FatalException;	
 
 }
