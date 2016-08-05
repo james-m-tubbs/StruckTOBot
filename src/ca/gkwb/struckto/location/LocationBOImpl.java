@@ -146,7 +146,10 @@ public class LocationBOImpl implements LocationBO {
 			logger.debug("Created stlVO: " + stlVO);
 			try {
 				LocationVO checkLocationExists = stlDAO.queryByLatLng(stlVO.getLat(), stlVO.getLng());
-				if (checkLocationExists != null) return checkLocationExists;
+				if (checkLocationExists != null) {
+					logger.debug("Found existing loc: " + checkLocationExists);
+					return checkLocationExists;
+				}
 				
 				//if doesn't exist, insert and return newest
 				stlDAO.insertStruckTOLocation(stlVO);

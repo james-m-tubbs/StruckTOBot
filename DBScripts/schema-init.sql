@@ -19,8 +19,8 @@ DROP TABLE strucktodb."TWEET";
 CREATE TABLE strucktodb."LOCATION"
 (
    "LOCATION_ID" SERIAL NOT NULL PRIMARY KEY, 
-   "LOCATION_LAT" real NOT NULL, 
-   "LOCATION_LONG" real NOT NULL, 
+   "LOCATION_LAT" double precision NOT NULL, 
+   "LOCATION_LONG" double precision NOT NULL, 
    "LOCATION_CITY" character varying, 
    "LOCATION_PROV" character varying, 
    "LOCATION_COUNTRY" character varying, 

@@ -24,16 +24,16 @@ public class LocationDAOImpl extends JdbcDaoSupport implements LocationDAO {
 	}	
 	
 	private final String QUERY_SQL = "SELECT " +
-			   "LOCATION_ID," +
-			   "LOCATION_LAT," +  
-			   "LOCATION_LONG," +  
-			   "LOCATION_CITY," + 
-			   "LOCATION_PROV," + 
-			   "LOCATION_COUNTRY," + 
-			   "LOCATION_CREATE_DATE," + 
-			   "LOCATION_USER " +			
+			   "\"LOCATION_ID\"," +
+			   "\"LOCATION_LAT\"," +  
+			   "\"LOCATION_LONG\"," +  
+			   "\"LOCATION_CITY\"," + 
+			   "\"LOCATION_PROV\"," + 
+			   "\"LOCATION_COUNTRY\"," + 
+			   "\"LOCATION_CREATE_DATE\"," + 
+			   "\"LOCATION_USER\" " +			
 			   "FROM strucktodb.\"LOCATION\" " +
-			 "WHERE LOCATION_ID = ?";
+			 "WHERE \"LOCATION_ID\" = ?";
 	
 	public LocationVO queryOneLocation(int id) throws GenericDBException {
 		
@@ -48,16 +48,16 @@ public class LocationDAOImpl extends JdbcDaoSupport implements LocationDAO {
 	};	
 	
 	private final String QUERY_NEW_LOCATION = "SELECT " +
-			   "LOCATION_ID," +
-			   "LOCATION_LAT," +  
-			   "LOCATION_LONG," +  
-			   "LOCATION_CITY," + 
-			   "LOCATION_PROV," + 
-			   "LOCATION_COUNTRY," + 
-			   "LOCATION_CREATE_DATE," + 
-			   "LOCATION_USER " +			
+			   "\"LOCATION_ID\"," +
+			   "\"LOCATION_LAT\"," +  
+			   "\"LOCATION_LONG\"," +  
+			   "\"LOCATION_CITY\"," + 
+			   "\"LOCATION_PROV\"," + 
+			   "\"LOCATION_COUNTRY\"," + 
+			   "\"LOCATION_CREATE_DATE\"," + 
+			   "\"LOCATION_USER\" " +				
 			   "FROM strucktodb.\"LOCATION\" " +
-			 "WHERE LOCATION_ID = (SELECT MAX(LOCATION_ID) FROM strucktodb.\"LOCATION\")";
+			 "WHERE \"LOCATION_ID\" = (SELECT MAX(\"LOCATION_ID\") FROM strucktodb.\"LOCATION\")";
 	
 	@Override
 	public LocationVO queryNewestLocation() throws GenericDBException {
@@ -76,17 +76,17 @@ public class LocationDAOImpl extends JdbcDaoSupport implements LocationDAO {
 	}
 	
 	private final String QUERY_LAT_LNG_SQL = "SELECT " +
-			   "LOCATION_ID," +
-			   "LOCATION_LAT," +  
-			   "LOCATION_LONG," +  
-			   "LOCATION_CITY," + 
-			   "LOCATION_PROV," + 
-			   "LOCATION_COUNTRY," + 
-			   "LOCATION_CREATE_DATE," + 
-			   "LOCATION_USER " +			
+			   "\"LOCATION_ID\"," +
+			   "\"LOCATION_LAT\"," +  
+			   "\"LOCATION_LONG\"," +  
+			   "\"LOCATION_CITY\"," + 
+			   "\"LOCATION_PROV\"," + 
+			   "\"LOCATION_COUNTRY\"," + 
+			   "\"LOCATION_CREATE_DATE\"," + 
+			   "\"LOCATION_USER\" " +				
 			 "FROM strucktodb.\"LOCATION\" " +
-			 "WHERE LOCATION_LAT = ?" +
-			 "AND LOCATION_LONG = ? ";	
+			 "WHERE \"LOCATION_LAT\" = ? " +
+			 "AND \"LOCATION_LONG\" = ? ";	
 	
 	@Override
 	public LocationVO queryByLatLng(Double lat, Double lng) throws GenericDBException {
