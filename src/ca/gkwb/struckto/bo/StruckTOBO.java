@@ -4,11 +4,11 @@ package ca.gkwb.struckto.bo;
 import java.sql.Date;
 import java.util.List;
 
+import ca.gkwb.struck.incident.dao.IncidentVO;
+import ca.gkwb.struck.location.dao.LocationVO;
+import ca.gkwb.struck.tweet.dao.TweetVO;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
-import ca.gkwb.struckto.incident.IncidentVO;
-import ca.gkwb.struckto.location.LocationVO;
-import ca.gkwb.struckto.tweet.TweetVO;
 import twitter4j.Status;
 
 public interface StruckTOBO {

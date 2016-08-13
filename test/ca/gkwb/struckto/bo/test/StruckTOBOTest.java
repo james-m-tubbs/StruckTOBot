@@ -13,11 +13,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.Assert;
 
+import ca.gkwb.struck.incident.dao.IncidentVO;
 import ca.gkwb.struckto.bo.StruckTOBO;
-import ca.gkwb.struckto.bo.StruckTOBOImpl;
-import ca.gkwb.struckto.incident.IncidentVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
-import ca.gkwb.twitter.connector.TwitterConnectorImpl;
 
 public class StruckTOBOTest {
 

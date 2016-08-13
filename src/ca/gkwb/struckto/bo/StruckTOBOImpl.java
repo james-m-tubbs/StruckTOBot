@@ -8,15 +8,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import ca.gkwb.struck.exception.db.GenericDBException;
+import ca.gkwb.struck.incident.dao.IncidentDAO;
+import ca.gkwb.struck.incident.dao.IncidentVO;
+import ca.gkwb.struck.location.dao.LocationVO;
+import ca.gkwb.struck.tweet.dao.TweetDAO;
+import ca.gkwb.struck.tweet.dao.TweetVO;
 import ca.gkwb.struckto.exception.FatalException;
-import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
-import ca.gkwb.struckto.incident.IncidentDAO;
-import ca.gkwb.struckto.incident.IncidentVO;
 import ca.gkwb.struckto.location.LocationBO;
-import ca.gkwb.struckto.location.LocationVO;
-import ca.gkwb.struckto.tweet.TweetDAO;
-import ca.gkwb.struckto.tweet.TweetVO;
 import ca.gkwb.twitter.connector.TwitterConnector;
 import lombok.Setter;
 import twitter4j.Status;

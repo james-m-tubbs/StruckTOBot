@@ -14,8 +14,10 @@ import com.google.maps.GeocodingApi;
 import com.google.maps.model.ComponentFilter;
 import com.google.maps.model.GeocodingResult;
 
+import ca.gkwb.struck.exception.db.GenericDBException;
+import ca.gkwb.struck.location.dao.LocationDAO;
+import ca.gkwb.struck.location.dao.LocationVO;
 import ca.gkwb.struckto.exception.FatalException;
-import ca.gkwb.struckto.exception.GenericDBException;
 import ca.gkwb.struckto.exception.WarnException;
 import lombok.Setter;
 

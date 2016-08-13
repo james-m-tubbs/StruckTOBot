@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.maps.model.GeocodingResult;
 
+import ca.gkwb.struck.location.dao.LocationVO;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
 
