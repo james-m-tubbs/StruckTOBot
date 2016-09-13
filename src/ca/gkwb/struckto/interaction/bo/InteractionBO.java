@@ -5,7 +5,7 @@ import ca.gkwb.struckto.exception.FatalException;
 
 public interface InteractionBO {
 	
-	public int processInteractions() throws FatalException;
+	public int processInteractions(int batchSize) throws FatalException;
 	
 	public int processOneInteraction(InteractionVO iVO) throws FatalException;
 	

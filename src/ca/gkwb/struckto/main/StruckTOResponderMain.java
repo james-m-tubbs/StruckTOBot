@@ -21,28 +21,24 @@ public class StruckTOResponderMain {
 		try {
 			//default values
 			int batchSize = 100;
-			String targetAcct = "StruckTOBot";
 			
 			logger.debug("Initializing StruckTOBO Responder");
 			ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
 			iBO = (InteractionBO)context.getBean("InteractionBO");
 			
 			if (args.length > 0) {
-				logger.debug("Target Acct: "+args[0]);
-				logger.debug("Batch Size: "+args[1]);
+				logger.debug("Batch Size: "+args[0]);
 				
-				targetAcct = args[0];
-				batchSize = new Integer(args[1]);
+				batchSize = new Integer(args[0]);
 			}
 				
-			logger.debug("Running with params: batchSize="+batchSize+", targetAcct="+targetAcct);
-//			int results = stBO.queryAndProcess(targetAcct, batchSize, hashTags);
-//			logger.info("Retweeted "+results+" new incidents");
+			logger.debug("Running with params: batchSize="+batchSize);
+			int results = iBO.processInteractions(batchSize);
+			logger.info("Processed "+results+" new interactions");
 		} catch (FatalException e) {
 			e.printStackTrace();
 			logger.error("Processed Crashed with Fatal Error", e);
 		}
 	}
-
 }
 
