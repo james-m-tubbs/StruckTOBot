@@ -48,3 +48,37 @@ INSERT INTO strucktodb."INCIDENT"(
         	sysdate,
         	5,
         	'N' );
+     
+--interaction data #1   	
+INSERT INTO strucktodb."INTERACTION"(
+		  "INTERACTION_TWEET_ID",
+		  "INTERACTION_USER",
+		  "INTERACTION_PROCESSED",
+		  "INTERACTION_RESULT",
+		  "INTERACTION_CREATE_DATE",
+		  "INTERACTION_ACTIVITY_DATE"
+		) VALUES (
+			740735330588995584,
+			'Gingerk1d',
+			'01',
+			null,
+			sysdate,
+			sysdate
+		);
+     	
+--interaction data #2		
+INSERT INTO strucktodb."INTERACTION"(
+		  "INTERACTION_TWEET_ID",
+		  "INTERACTION_USER",
+		  "INTERACTION_PROCESSED",
+		  "INTERACTION_RESULT",
+		  "INTERACTION_CREATE_DATE",
+		  "INTERACTION_ACTIVITY_DATE"
+		) VALUES (
+			740735330588995584,
+			'Gingerk1d',
+			'03',
+			null,
+			sysdate,
+			sysdate
+		);   		

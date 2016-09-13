@@ -42,3 +42,14 @@ CREATE TABLE strucktodb."INCIDENT"
   CONSTRAINT "FK_TWEET" FOREIGN KEY ("INCIDENT_TWEET_ID")
       REFERENCES strucktodb."TWEET" ("TWEET_ID") 
 );
+
+--create interaction table
+CREATE TABLE strucktodb."INTERACTION"
+(
+  "INTERACTION_TWEET_ID" bigint NOT NULL PRIMARY KEY,
+  "INTERACTION_USER" character varying,
+  "INTERACTION_PROCESSED" character varying,
+  "INTERACTION_RESULT" character varying,
+  "INTERACTION_CREATE_DATE" date NOT NULL,
+  "INTERACTION_ACTIVITY_DATE" date NOT NULL
+);
