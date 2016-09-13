@@ -1,13 +1,9 @@
 package ca.gkwb.struckto.main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ca.gkwb.struckto.bo.StruckTOBO;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.interaction.bo.InteractionBO;
 
@@ -28,7 +24,6 @@ public class StruckTOResponderMain {
 			
 			if (args.length > 0) {
 				logger.debug("Batch Size: "+args[0]);
-				
 				batchSize = new Integer(args[0]);
 			}
 				

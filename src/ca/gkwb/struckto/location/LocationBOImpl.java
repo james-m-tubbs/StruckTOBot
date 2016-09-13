@@ -23,7 +23,7 @@ import lombok.Setter;
 
 public class LocationBOImpl implements LocationBO {
 
-	private String intersectionRegex = "([A-Z]\\w+|[A-Z]\\w+ [A-Z]\\w+) ([Aa]ve*|Blvd|Rd|Sq|Cr+|St|Tr|Dr|Road) *[NSEW]*";
+	private String intersectionRegex = "([A-Z]\\w+|[A-Z]\\w+ [A-Z]\\w+) ([Aa]ve*|Bl|Blvd|Rd|Sq|Cr+|St|Tr|Dr|Road) *[NSEW]*";
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
     private	GeoApiContext context;

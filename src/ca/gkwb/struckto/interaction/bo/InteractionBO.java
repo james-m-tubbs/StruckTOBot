@@ -2,12 +2,11 @@ package ca.gkwb.struckto.interaction.bo;
 
 import ca.gkwb.struck.interaction.dao.InteractionVO;
 import ca.gkwb.struckto.exception.FatalException;
+import twitter4j.Status;
 
 public interface InteractionBO {
 	
 	public int processInteractions(int batchSize) throws FatalException;
-	
-	public int processOneInteraction(InteractionVO iVO) throws FatalException;
 	
 	public void completeInteraction(InteractionVO iVO) throws FatalException;
 	
@@ -16,5 +15,11 @@ public interface InteractionBO {
 	public String generateRecentIncidentReprot(String status) throws FatalException;
 	
 	public String generateLocationReport(String status) throws FatalException;
+	
+	public boolean doesInteractionExist(long tweetId) throws FatalException;
+
+	boolean processOneInteraction(InteractionVO iVO, Status s) throws FatalException;
+
+	String findInteractionType(Status s);
 
 }

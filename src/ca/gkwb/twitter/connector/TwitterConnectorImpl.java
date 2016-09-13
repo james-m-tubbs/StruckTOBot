@@ -208,7 +208,19 @@ public class TwitterConnectorImpl implements TwitterConnector {
 			logger.error("Error posting status",e);
 			throw new WarnException(e);
 		}
-	}	
+	}
+	
+	@Override
+	public List<Status> getStatusByMentions(int count) throws FatalException, WarnException {
+		if (twitter == null) throw new FatalException("Not connected");
+		try {
+			Paging paging = new Paging(1, count);
+			return twitter.getMentionsTimeline(paging);
+		} catch (TwitterException e) {
+			logger.error("Error querying mentions", e);
+			throw new WarnException(e);
+		}	
+	}
 		
 	//**************************************************
 	//** Setters

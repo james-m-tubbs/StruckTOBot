@@ -33,4 +33,6 @@ public interface TwitterConnector {
 	public boolean checkStatusRegexMatch(Status status, String regex) throws WarnException;
 	
 	public long sendStatusUpdate(String status) throws FatalException, WarnException;
+
+	public List<Status> getStatusByMentions(int count) throws FatalException, WarnException;
 }
