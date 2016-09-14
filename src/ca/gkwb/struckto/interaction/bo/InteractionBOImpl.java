@@ -147,6 +147,14 @@ public class InteractionBOImpl implements InteractionBO {
 	}
 	
 	public boolean processLocationInteraction(InteractionVO iVO, Status s) throws WarnException, FatalException {
+		List<String> streetLocation = lBO.parseStreetLocation(s.getText());
+		if (streetLocation.size() != 2) {
+			//sendSorryLocationTweet();
+			return false;
+		}
+		
+		String intersection = streetLocation.get(0)+ " + " + streetLocation.get(1);
+		
 		LocationVO locationVO = lBO.processOneTweet(s.getText());
 		List<IncidentVO> incidents = stBO.getIncidentsByLocationVO(locationVO);
 		
@@ -177,30 +185,31 @@ public class InteractionBOImpl implements InteractionBO {
 		}
 		
 		sendLocationInteractionTweet(
+				intersection,
 				weeklyCount, 
 				monthlyCount, 
 				yearlyCount, 
 				incidents.size(), 
-				s.getUser().getName());
+				s.getUser().getScreenName());
 		
 		return true;
 	};
 	
 	@Override
 	public void sendLocationInteractionTweet(
+			String intersection,
 			int weekly, 
 			int monthly, 
 			int yearly, 
 			int allTime, 
 			String username) 
 					throws WarnException, FatalException {
-		String statusText = "@" + username + "\n" +
-					"Incidents at Location\n" +
-					"----------------------\n" +
-					"7 Days: " + weekly + "\n" +
-					"30 Days: " + monthly + "\n" +
-					"This Year: " + yearly + "\n" +
-					"All Time: " + allTime;
+		String statusText = "@" + username + " " +
+					"Incidents at " + intersection + ":\n" +
+					"7 Days - " + weekly + "\n" +
+					"30 Days - " + monthly + "\n" +
+					"This Year - " + yearly + "\n" +
+					"All Time - " + allTime;
 		tConn.sendStatusUpdate(statusText);
 	}
 }

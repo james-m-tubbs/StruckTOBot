@@ -29,7 +29,7 @@ public class InteractionBOTest {
 	@Test
 	public void testSendLocationUpdate() {
 		try {
-			interactionBO.sendLocationInteractionTweet(0, 1, 2, 3, "Gingerk1d");
+			interactionBO.sendLocationInteractionTweet("Test1 + Test 2", 0, 1, 2, 3, "Gingerk1d");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.state(false);

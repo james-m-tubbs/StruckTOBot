@@ -14,18 +14,18 @@
 	  </property>
 	</bean>
 	
-	<!-- <bean id="dataSource" 
+	<bean id="dataSource" 
          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${jdbc.driver}" />
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.user}" />
 		<property name="password" value="${jdbc.password}" />
-	</bean> -->
+	</bean>
 	
-	<jdbc:embedded-database id="dataSource" type="HSQL">
+	<!-- <jdbc:embedded-database id="dataSource" type="HSQL">
 	    <jdbc:script location="classpath:test-schema-init.sql"/>
 	    <jdbc:script location="classpath:test-data-init.sql"/>
-	</jdbc:embedded-database>
+	</jdbc:embedded-database> -->
 	
 	<bean id="struckTOIncidentDAO" class="ca.gkwb.struck.incident.dao.IncidentDAOImpl">
 		<property name="dataSource" ref="dataSource" />
@@ -60,6 +60,7 @@
    <bean id="InteractionBO" class="ca.gkwb.struckto.interaction.bo.InteractionBOImpl">
        <property name="tConn" ref="TwitterConnector"/>
        <property name="lBO" ref="struckTOLocationBO"/>
+       <property name="stBO" ref="StruckTOBO" />
    </bean>   
 
 </beans>

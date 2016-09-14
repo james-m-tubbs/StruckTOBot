@@ -23,7 +23,7 @@ public interface InteractionBO {
 
 	public String findInteractionType(Status s);
 
-	public void sendLocationInteractionTweet(int weekly, int monthly, int yearly, int allTime, String username)
+	public void sendLocationInteractionTweet(String intersection, int weekly, int monthly, int yearly, int allTime, String username)
 			throws WarnException, FatalException;
 
 }
