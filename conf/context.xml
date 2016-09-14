@@ -20,7 +20,7 @@
 		<property name="url" value="${jdbc.url}" />
 		<property name="username" value="${jdbc.user}" />
 		<property name="password" value="${jdbc.password}" />
-	</bean>-->
+	</bean> -->
 	
 	<jdbc:embedded-database id="dataSource" type="HSQL">
 	    <jdbc:script location="classpath:test-schema-init.sql"/>
@@ -56,5 +56,11 @@
        <property name="sttDAO" ref="struckTOTwitterDAO" />
        <property name="stlBO" ref="struckTOLocationBO" />
    </bean>
+   
+   <bean id="InteractionBO" class="ca.gkwb.struckto.interaction.bo.InteractionBOImpl">
+       <property name="tConn" ref="TwitterConnector"/>
+       <property name="lBO" ref="struckTOLocationBO"/>
+   </bean>   
 
 </beans>
+

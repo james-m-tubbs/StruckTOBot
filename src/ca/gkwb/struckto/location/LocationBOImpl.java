@@ -162,6 +162,6 @@ public class LocationBOImpl implements LocationBO {
 			}
 		}
 		return stlVO;		
-	}	
+	}
 
 }

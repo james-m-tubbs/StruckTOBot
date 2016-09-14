@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ca.gkwb.struck.exception.db.GenericDBException;
+import ca.gkwb.struck.exception.db.NoRowFoundException;
 import ca.gkwb.struck.incident.dao.IncidentDAO;
 import ca.gkwb.struck.incident.dao.IncidentVO;
 import ca.gkwb.struck.location.dao.LocationVO;
@@ -167,5 +168,16 @@ public class StruckTOBOImpl implements StruckTOBO {
 		}
 		logger.debug("Generated LocationVO : " + stlVO);
 		return stlVO;
+	}
+
+	@Override
+	public List<IncidentVO> getIncidentsByLocationVO(LocationVO locationVO) throws FatalException {
+		try {
+			return stiDAO.queryByLocationId(locationVO.getId());
+		} catch (NoRowFoundException e) {
+			return new ArrayList<IncidentVO>();
+		} catch (Exception e) {
+			throw new FatalException(e);
+		}
 	}
 }

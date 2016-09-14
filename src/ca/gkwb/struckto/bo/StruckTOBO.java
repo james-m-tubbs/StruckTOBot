@@ -89,5 +89,7 @@ public interface StruckTOBO {
 	 * @throws FatalException
 	 */
 	public LocationVO generateLocationVO(Status s) throws FatalException;
+	
+	public List<IncidentVO> getIncidentsByLocationVO(LocationVO locationVO) throws FatalException;
 
 }

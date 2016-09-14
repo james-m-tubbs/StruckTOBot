@@ -1,14 +1,18 @@
 package ca.gkwb.struckto.interaction.bo;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import ca.gkwb.struck.incident.dao.IncidentVO;
 import ca.gkwb.struck.interaction.dao.InteractionDAO;
 import ca.gkwb.struck.interaction.dao.InteractionVO;
+import ca.gkwb.struck.location.dao.LocationVO;
 import ca.gkwb.struckto.bo.StruckTOBO;
 import ca.gkwb.struckto.exception.FatalException;
 import ca.gkwb.struckto.exception.WarnException;
@@ -53,6 +57,11 @@ public class InteractionBOImpl implements InteractionBO {
 	public boolean processOneInteraction(InteractionVO iVO, Status s) throws FatalException {
 		//if (!doesInteractionExist(iVO.getTweetId())) {
 			//iDAO.insert(iVO);
+		
+		//prevent infinite loops
+		if (s.getUser().getName().equalsIgnoreCase("StruckTOBot")) return false;
+		
+		try {
 			String type = findInteractionType(s);
 			if (type != null) {
 				logger.debug("Status : " + s.getText());
@@ -64,12 +73,16 @@ public class InteractionBOImpl implements InteractionBO {
 			//
 			//
 			//completeInteraction(iVO);
-			}
-//		} else {
-//			logger.info("Interaction Exists - ignoring: " + iVO.getTweetId());
-//			return false;
-//		}
-		return true;
+				}
+	//		} else {
+	//			logger.info("Interaction Exists - ignoring: " + iVO.getTweetId());
+	//			return false;
+	//		}
+			return true;
+		} catch (WarnException e) {
+			logger.error("Could not process interaction", e);
+		}
+		return false;
 	}
 
 	@Override
@@ -133,9 +146,61 @@ public class InteractionBOImpl implements InteractionBO {
 		return false;
 	}
 	
-	public boolean processLocationInteraction(InteractionVO iVO, Status s) {
-		logger.debug("Parsed Location: "+ lBO.parseStreetLocation(s.getText()));
-		//TODO stBO.getIncidentsForLocation();
-		return false;
+	public boolean processLocationInteraction(InteractionVO iVO, Status s) throws WarnException, FatalException {
+		LocationVO locationVO = lBO.processOneTweet(s.getText());
+		List<IncidentVO> incidents = stBO.getIncidentsByLocationVO(locationVO);
+		
+		logger.debug("Found incidents: " + incidents);
+		
+		int weeklyCount = 0;
+		int monthlyCount = 0;
+		int yearlyCount = 0;
+		
+		Calendar cal = Calendar.getInstance();
+		
+		cal.add(Calendar.DATE, -23);
+		Date month = new Date(cal.getTime().getTime());
+		
+		cal = Calendar.getInstance();
+		
+		for (int i=0;i<incidents.size();i++) {
+			Calendar createDate = Calendar.getInstance();
+			createDate.setTime(incidents.get(i).getCreateDate());
+			
+			if (cal.get(Calendar.YEAR) == createDate.get(Calendar.YEAR)) yearlyCount++;
+			
+			cal.add(Calendar.DATE, -7);
+			if (createDate.after(cal)) weeklyCount++;
+			
+			cal.add(Calendar.DATE, -23);
+			if (createDate.after(cal)) monthlyCount++;
+		}
+		
+		sendLocationInteractionTweet(
+				weeklyCount, 
+				monthlyCount, 
+				yearlyCount, 
+				incidents.size(), 
+				s.getUser().getName());
+		
+		return true;
+	};
+	
+	@Override
+	public void sendLocationInteractionTweet(
+			int weekly, 
+			int monthly, 
+			int yearly, 
+			int allTime, 
+			String username) 
+					throws WarnException, FatalException {
+		String statusText = "@" + username + "\n" +
+					"Incidents at Location\n" +
+					"----------------------\n" +
+					"7 Days: " + weekly + "\n" +
+					"30 Days: " + monthly + "\n" +
+					"This Year: " + yearly + "\n" +
+					"All Time: " + allTime;
+		tConn.sendStatusUpdate(statusText);
 	}
 }
